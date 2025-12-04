@@ -8,8 +8,8 @@ type LoginRequest = {
 };
 
 type LoginResponse = {
-    success: boolean;
-    // Outros possíveis campos podem ser adicionados futuramente
+    access_token: string;
+    refresh_token: string;
 };
 
 type RegisterRequest = {
@@ -19,12 +19,13 @@ type RegisterRequest = {
 };
 
 type RegisterResponse = {
-    success: boolean;
-    // Outros possíveis campos podem ser adicionados futuramente
+    access_token: string;
+    refresh_token: string;
 };
 
-async function login(data: LoginRequest): Promise<LoginResponse> {
+async function login(data: LoginRequest): Promise<LoginResponse | null> {
     try {
+        process.env
         const response = await axios.post(`${BASE_URL}/login`, data, {
             headers: {
                 "Content-Type": "application/json",
@@ -32,15 +33,15 @@ async function login(data: LoginRequest): Promise<LoginResponse> {
         });
 
         return {
-            success: !!response.data.success,
-            // ...outros campos podem ser retornados aqui futuramente
+            access_token: response.data.access_token,
+            refresh_token: response.data.refresh_token,
         };
     } catch {
-        return { success: false };
+        return null;
     }
 }
 
-async function register(data: RegisterRequest): Promise<RegisterResponse> {
+async function register(data: RegisterRequest): Promise<RegisterResponse | null> {
     try {
         const response = await axios.post(`${BASE_URL}/register`, data, {
             headers: {
@@ -49,11 +50,11 @@ async function register(data: RegisterRequest): Promise<RegisterResponse> {
         });
 
         return {
-            success: !!response.data.success,
-            // ...outros campos podem ser retornados aqui futuramente
+            access_token: response.data.access_token,
+            refresh_token: response.data.refresh_token,
         };
     } catch {
-        return { success: false };
+        return null;
     }
 }
 
