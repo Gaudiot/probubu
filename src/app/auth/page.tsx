@@ -1,26 +1,21 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { AuthTabs } from "./components/AuthTabs";
-import { LoginForm } from "./components/LoginForm";
-import { RegisterForm } from "./components/RegisterForm";
-import { UIColors } from "@/core/design/ui_colors";
-
-// Enum para simplificar o controle de estado das tabs
-export enum AuthTab {
-    Login,
-    Register
-}
+import { AuthTabs } from './components/AuthTabs';
+import { LoginForm } from './components/LoginForm';
+import { RegisterForm } from './components/RegisterForm';
+import { UIColors } from '@/core/design/ui_colors';
+import { useAuthTab } from './hooks/useAuthTab';
+import { AuthTab } from './types/authTypes';
 
 function AuthPage() {
-    const [tab, setTab] = useState<AuthTab>(AuthTab.Login);
+    const { activeTab, setActiveTab, isLoginTab } = useAuthTab();
 
     return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="w-full max-w-md">
-                <AuthTabs activeTab={tab} onTabChange={setTab} />
+                <AuthTabs activeTab={activeTab} onTabChange={setActiveTab} />
                 <div className={`${UIColors.primaryBg} shadow-lg rounded-b-xl px-8 py-10`}>
-                    {tab === AuthTab.Login ? <LoginForm /> : <RegisterForm />}
+                    {isLoginTab ? <LoginForm /> : <RegisterForm />}
                 </div>
             </div>
         </div>
