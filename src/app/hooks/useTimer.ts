@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { intervalToDuration } from 'date-fns';
 
 export function useTimer() {
   const [seconds, setSeconds] = useState(0);
@@ -27,14 +26,9 @@ export function useTimer() {
   }, []);
 
   const formatTime = useCallback((totalSeconds: number): string => {
-    const duration = intervalToDuration({
-      start: 0,
-      end: totalSeconds * 1000
-    });
-
-    const hours = duration.hours || 0;
-    const minutes = duration.minutes || 0;
-    const secs = duration.seconds || 0;
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
 
     // If less than 1 hour, show only mm:ss
     if (hours === 0) {
