@@ -1,6 +1,6 @@
 'use client';
 
-import { UIColors } from '@/core/design/ui_colors';
+import { TextField, Button, Alert, Box } from '@mui/material';
 import { useLoginForm } from '../hooks/useLoginForm';
 
 export function LoginForm() {
@@ -15,38 +15,42 @@ export function LoginForm() {
   } = useLoginForm();
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 animate-fade-in">
-      <label className="flex flex-col gap-1">
-        <span>Email</span>
-        <input
-          type="email"
-          className={`px-3 py-2 rounded-md ${UIColors.input}`}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          autoComplete="email"
-        />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span>Senha</span>
-        <input
-          type="password"
-          className={`px-3 py-2 rounded-md ${UIColors.input}`}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          autoComplete="current-password"
-        />
-      </label>
-      {error && <span className={UIColors.error}>{error}</span>}
-      <button
+    <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <TextField
+        label="Email"
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        fullWidth
+        autoComplete="email"
+        variant="outlined"
+      />
+
+      <TextField
+        label="Senha"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        fullWidth
+        autoComplete="current-password"
+        variant="outlined"
+      />
+
+      {error && <Alert severity="error">{error}</Alert>}
+
+      <Button
         type="submit"
+        variant="contained"
+        fullWidth
         disabled={loading}
-        className={`mt-2 w-full py-2 px-4 rounded-md font-medium ${UIColors.accent} transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
+        size="large"
+        sx={{ mt: 1, py: 1.5 }}
       >
         {loading ? 'Entrando...' : 'Entrar'}
-      </button>
-    </form>
+      </Button>
+    </Box>
   );
 }
 

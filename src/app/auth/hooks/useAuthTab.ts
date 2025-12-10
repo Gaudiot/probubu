@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { AuthTab } from '../types/authTypes';
 
-export function useAuthTab() {
-    const [activeTab, setActiveTab] = useState<AuthTab>(AuthTab.Login);
+export function useAuthTab(initialTab: AuthTab = AuthTab.Login) {
+    const [activeTab, setActiveTab] = useState<AuthTab>(initialTab);
 
     const switchToLogin = () => setActiveTab(AuthTab.Login);
     const switchToRegister = () => setActiveTab(AuthTab.Register);

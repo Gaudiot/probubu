@@ -1,26 +1,55 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
+import { Box, Container, Paper } from '@mui/material';
 import { AuthTabs } from './components/AuthTabs';
 import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
-import { UIColors } from '@/core/design/ui_colors';
 import { useAuthTab } from './hooks/useAuthTab';
 import { Navbar } from '@/components/navbar';
+import { AuthTab } from './types/authTypes';
 
 function AuthPage() {
-    const { activeTab, setActiveTab, isLoginTab } = useAuthTab();
+    const searchParams = useSearchParams();
+    const typeParam = searchParams.get('type');
+
+    // Determina a tab inicial baseado no query param
+    const getInitialTab = (): AuthTab => {
+        if (typeParam === 'login') return AuthTab.Login;
+        if (typeParam === 'register') return AuthTab.Register;
+        return AuthTab.Login; // Padrão
+    };
+
+    const { activeTab, setActiveTab, isLoginTab } = useAuthTab(getInitialTab());
 
     return (
         <>
             <Navbar />
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="w-full max-w-md">
-                    <AuthTabs activeTab={activeTab} onTabChange={setActiveTab} />
-                    <div className={`${UIColors.primaryBg} shadow-lg rounded-b-xl px-8 py-10`}>
-                        {isLoginTab ? <LoginForm /> : <RegisterForm />}
-                    </div>
-                </div>
-            </div>
+            <Box
+                sx={{
+                    minHeight: '100vh',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    p: 2,
+                }}
+            >
+                <Container maxWidth="sm">
+                    <Box sx={{ width: '100%' }}>
+                        <AuthTabs activeTab={activeTab} onTabChange={setActiveTab} />
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                borderRadius: '0 0 12px 12px',
+                                px: 4,
+                                py: 5,
+                            }}
+                        >
+                            {isLoginTab ? <LoginForm /> : <RegisterForm />}
+                        </Paper>
+                    </Box>
+                </Container>
+            </Box>
         </>
     );
 }

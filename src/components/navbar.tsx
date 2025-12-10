@@ -36,28 +36,18 @@ function NavBarRightmostComponent() {
         );
     }
 
-    const handleLoginClick = () => {
-        window.location.href = '/auth';
-    };
-
-    const handleCadastroClick = () => {
-        window.location.href = '/auth';
-    };
-
     return (
         <div className="flex items-center gap-4">
-            <button
-                onClick={handleLoginClick}
-                className="underline text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer"
-            >
+            <Link href="/auth?type=login" className="cursor-pointer">
                 Login
-            </button>
-            <button
-                onClick={handleCadastroClick}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
-            >
-                Cadastro
-            </button>
+            </Link>
+            <Link href="/auth?type=register" className="cursor-pointer">
+                <button
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
+                >
+                    Cadastro
+                </button>
+            </Link>
         </div>
     );
 }
