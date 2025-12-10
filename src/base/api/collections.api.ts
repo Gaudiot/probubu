@@ -1,4 +1,5 @@
 import axios from "axios";
+import { apiClient } from "./axios-instance.api";
 
 const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
 
@@ -42,11 +43,7 @@ type OpenCollectionPackResponse = {
 
 async function getCollections(): Promise<GetCollectionsResponse | null> {
     try {
-        const response = await axios.get(`${BASE_URL}/collections`, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const response = await apiClient.get(`${BASE_URL}/collections`);
 
         return {
             collections: response.data.collections.map((collection: any) => ({
@@ -63,11 +60,7 @@ async function getCollections(): Promise<GetCollectionsResponse | null> {
 
 async function getCollection(data: GetCollectionRequest): Promise<GetCollectionResponse | null> {
     try {
-        const response = await axios.get(`${BASE_URL}/collections/${data.id}`, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const response = await apiClient.get(`${BASE_URL}/collections/${data.id}`);
 
         return {
             id: response.data.id,
@@ -84,11 +77,8 @@ async function getCollection(data: GetCollectionRequest): Promise<GetCollectionR
 
 async function openCollectionPack(data: OpenCollectionPackRequest): Promise<OpenCollectionPackResponse | null> {
     try {
-        const response = await axios.post(`${BASE_URL}/collections/${data.id}/open-pack`, {}, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const response = await apiClient.post(`${BASE_URL}/collections/${data.id}/open-pack`, {});
+
         return {
             cards: response.data.cards.map((card: any) => ({
                 id: card.id,

@@ -1,4 +1,6 @@
+import { CookiesKeys, getCookie } from "@/core/utils/cookies";
 import axios from "axios";
+import { apiClient } from "./axios-instance.api";
 
 const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
 
@@ -25,12 +27,7 @@ type RegisterResponse = {
 
 async function login(data: LoginRequest): Promise<LoginResponse | null> {
     try {
-        process.env
-        const response = await axios.post(`${BASE_URL}/login`, data, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const response = await apiClient.post(`${BASE_URL}/login`, data);
 
         return {
             access_token: response.data.access_token,
@@ -43,11 +40,7 @@ async function login(data: LoginRequest): Promise<LoginResponse | null> {
 
 async function register(data: RegisterRequest): Promise<RegisterResponse | null> {
     try {
-        const response = await axios.post(`${BASE_URL}/register`, data, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const response = await apiClient.post(`${BASE_URL}/register`, data);
 
         return {
             access_token: response.data.access_token,

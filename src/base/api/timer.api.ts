@@ -1,27 +1,20 @@
 import axios from "axios";
+import { apiClient } from "./axios-instance.api";
 
 const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
 
-type StartTimerRequest = {
-    id: string;
-};
-
-type FinishTimerRequest = {
-    id: string;
-};
-
-type TimerResponse = {
+type StartTimerResponse = {
     success: boolean;
-    // Outros possíveis campos podem ser adicionados futuramente
 };
 
-async function startTimer(data: StartTimerRequest): Promise<TimerResponse> {
+type FinishTimerResponse = {
+    success: boolean;
+};
+
+async function startTimer(): Promise<StartTimerResponse> {
     try {
-        const response = await axios.post(`${BASE_URL}/startTimer`, data, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const response = await apiClient.post(`${BASE_URL}/startTimer`, {});
+
         return {
             success: !!response.data.success,
             // ...outros campos podem ser retornados aqui futuramente
@@ -31,16 +24,12 @@ async function startTimer(data: StartTimerRequest): Promise<TimerResponse> {
     }
 }
 
-async function finishTimer(data: FinishTimerRequest): Promise<TimerResponse> {
+async function finishTimer(): Promise<FinishTimerResponse> {
     try {
-        const response = await axios.post(`${BASE_URL}/finishTimer`, data, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const response = await apiClient.post(`${BASE_URL}/finishTimer`, {});
+
         return {
             success: !!response.data.success,
-            // ...outros campos podem ser retornados aqui futuramente
         };
     } catch {
         return { success: false };

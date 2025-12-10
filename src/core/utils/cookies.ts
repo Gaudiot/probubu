@@ -8,6 +8,10 @@
 
 import { DAY_IN_MILLISECONDS } from "./constants";
 
+export class CookiesKeys {
+    static REFRESH_TOKEN = 'refresh_token';
+}
+
 interface CookieOptions {
     days?: number;
     path?: string;
