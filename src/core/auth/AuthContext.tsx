@@ -5,7 +5,7 @@ import { createContext, useState, useCallback, ReactNode, useEffect } from 'reac
 interface AuthContextData {
     accessToken: string | null;
     isAuthenticated: boolean;
-    setAccessToken: (token: string | null) => void;
+    setAccessToken: (token: string) => void;
     clearAuth: () => void;
 }
 
@@ -26,7 +26,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }, []);
 
-    const setAccessToken = useCallback((token: string | null) => {
+    const setAccessToken = useCallback((token: string) => {
+        sessionStorage.setItem('access_token', token);
         setAccessTokenState(token);
     }, []);
 

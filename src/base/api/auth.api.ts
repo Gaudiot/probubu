@@ -1,17 +1,19 @@
-import { CookiesKeys, getCookie } from "@/core/utils/cookies";
-import axios from "axios";
 import { apiClient } from "./axios-instance.api";
+import { Result } from "@/core/types/result";
 
 const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
+
+type ApiError = {
+    message: string;
+    statusCode?: number;
+    details?: unknown;
+};
+
+// MARK: - Request Payloads
 
 type LoginRequest = {
     email: string;
     senha: string;
-};
-
-type LoginResponse = {
-    access_token: string;
-    refresh_token: string;
 };
 
 type RegisterRequest = {
@@ -20,38 +22,121 @@ type RegisterRequest = {
     senha: string;
 };
 
+type ForgotPasswordRequest = {
+    email: string;
+};
+
+type ResetPasswordRequest = {
+    resetPasswordToken: string;
+    newPassword: string;
+}
+
+// MARK: - Response Payloads
+
+type LoginResponse = {
+    access_token: string;
+    refresh_token: string;
+};
+
 type RegisterResponse = {
     access_token: string;
     refresh_token: string;
 };
 
-async function login(data: LoginRequest): Promise<LoginResponse | null> {
-    try {
-        const response = await apiClient.post(`${BASE_URL}/login`, data);
+type ForgotPasswordResponse = {
+    success: boolean;
+};
 
-        return {
-            access_token: response.data.access_token,
-            refresh_token: response.data.refresh_token,
-        };
-    } catch {
-        return null;
+type ResetPasswordResponse = {
+    success: boolean;
+};
+
+// MARK: - Auth API Functions
+
+async function logout(): Promise<Result<void, ApiError>> {
+    try {
+        await apiClient.post(`${BASE_URL}/logout`);
+
+        return Result.ok(undefined);
+    } catch (error: any) {
+        return Result.error({
+            message: error.response?.data?.message || 'Error while logging out',
+            statusCode: error.response?.status,
+            details: error.response?.data,
+        });
     }
 }
 
-async function register(data: RegisterRequest): Promise<RegisterResponse | null> {
+async function login(data: LoginRequest): Promise<Result<LoginResponse, ApiError>> {
+    try {
+        const response = await apiClient.post(`${BASE_URL}/login`, data);
+
+        return Result.ok({
+            access_token: response.data.access_token,
+            refresh_token: response.data.refresh_token,
+        });
+    } catch (error: any) {
+        return Result.error({
+            message: error.response?.data?.message || 'Error while logging in',
+            statusCode: error.response?.status,
+            details: error.response?.data,
+        });
+    }
+}
+
+async function register(data: RegisterRequest): Promise<Result<RegisterResponse, ApiError>> {
     try {
         const response = await apiClient.post(`${BASE_URL}/register`, data);
 
-        return {
+        return Result.ok({
             access_token: response.data.access_token,
             refresh_token: response.data.refresh_token,
-        };
-    } catch {
-        return null;
+        });
+    } catch (error: any) {
+        return Result.error({
+            message: error.response?.data?.message || 'Error while registering',
+            statusCode: error.response?.status,
+            details: error.response?.data,
+        });
+    }
+}
+
+async function forgotPassword(data: ForgotPasswordRequest): Promise<Result<ForgotPasswordResponse, ApiError>> {
+    try {
+        const response = await apiClient.post(`${BASE_URL}/forgot-password`, data);
+
+        return Result.ok({
+            success: response.data.success,
+        });
+    } catch (error: any) {
+        return Result.error({
+            message: error.response?.data?.message || 'Error while sending forgot password email',
+            statusCode: error.response?.status,
+            details: error.response?.data,
+        });
+    }
+}
+
+async function resetPassword(data: ResetPasswordRequest): Promise<Result<ResetPasswordResponse, ApiError>> {
+    try {
+        const response = await apiClient.post(`${BASE_URL}/reset-password`, data);
+
+        return Result.ok({
+            success: response.data.success,
+        });
+    } catch (error: any) {
+        return Result.error({
+            message: error.response?.data?.message || 'Error while resetting password',
+            statusCode: error.response?.status,
+            details: error.response?.data,
+        });
     }
 }
 
 export const authApi = {
+    logout,
     login,
     register,
+    forgotPassword,
+    resetPassword,
 };
