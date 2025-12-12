@@ -5,6 +5,5 @@
 
 export { AuthProvider, AuthContext } from './AuthContext';
 export { useAuth } from './useAuth';
-export { useLogout } from './useLogout';
 export { authService } from './authService';
 

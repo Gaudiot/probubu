@@ -13,13 +13,13 @@ type ApiError = {
 
 type LoginRequest = {
     email: string;
-    senha: string;
+    password: string;
 };
 
 type RegisterRequest = {
     email: string;
     username: string;
-    senha: string;
+    password: string;
 };
 
 type ForgotPasswordRequest = {
@@ -34,13 +34,13 @@ type ResetPasswordRequest = {
 // MARK: - Response Payloads
 
 type LoginResponse = {
-    access_token: string;
-    refresh_token: string;
+    accessToekn: string;
+    refreshToken: string;
 };
 
 type RegisterResponse = {
-    access_token: string;
-    refresh_token: string;
+    accessToekn: string;
+    refreshToken: string;
 };
 
 type ForgotPasswordResponse = {
@@ -72,8 +72,8 @@ async function login(data: LoginRequest): Promise<Result<LoginResponse, ApiError
         const response = await apiClient.post(`${BASE_URL}/login`, data);
 
         return Result.ok({
-            access_token: response.data.access_token,
-            refresh_token: response.data.refresh_token,
+            accessToekn: response.data.access_token,
+            refreshToken: response.data.refresh_token,
         });
     } catch (error: any) {
         return Result.error({
@@ -89,8 +89,8 @@ async function register(data: RegisterRequest): Promise<Result<RegisterResponse,
         const response = await apiClient.post(`${BASE_URL}/register`, data);
 
         return Result.ok({
-            access_token: response.data.access_token,
-            refresh_token: response.data.refresh_token,
+            accessToekn: response.data.access_token,
+            refreshToken: response.data.refresh_token,
         });
     } catch (error: any) {
         return Result.error({
