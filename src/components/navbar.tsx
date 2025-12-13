@@ -22,7 +22,8 @@ function NavBarLeftmostComponent() {
 }
 
 function NavBarRightmostComponent() {
-    const { isAuthenticated } = useAuth();
+    const { context } = useAuth();
+    const isAuthenticated = context.isAuthenticated;
 
     if (isAuthenticated) {
         return (

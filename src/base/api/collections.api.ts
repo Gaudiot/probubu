@@ -1,39 +1,22 @@
-import axios from "axios";
+import { Result } from "@/core/types/result";
+import { ApiError } from "next/dist/server/api-utils";
 import { apiClient } from "./axios-instance.api";
 
 const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
 
-// Tipos para as respostas e requests
-type CollectionSummary = {
-    id: string;
-    name: string;
-    pack_cost: number;
-    image_url: string;
-};
+// MARK: - Request Payloads
 
-type GetCollectionsResponse = {
-    collections: CollectionSummary[];
+type BuyPackRequest = {
+    collectionId: string;
 };
 
 type GetCollectionRequest = {
     id: string;
 };
 
-type GetCollectionResponse = {
-    id: string;
-    name: string;
-    description?: string;
-    pack_cost: number;
-    drop_config: Record<string, number>;
-    cards_per_pack: number;
-    cards: string[];
-};
+// MARK: - Response Payloads
 
-type OpenCollectionPackRequest = {
-    id: string;
-};
-
-type OpenCollectionPackResponse = {
+type BuyPackResponse = {
     cards: {
         id: string;
         name: string;
@@ -41,52 +24,69 @@ type OpenCollectionPackResponse = {
     }[];
 };
 
-async function getCollections(): Promise<GetCollectionsResponse | null> {
+type GetCollectionsListResponse = {
+    collections: {
+        id: string;
+        name: string;
+    }[];
+};
+
+type GetCollectionResponse = {
+    id: string;
+    name: string;
+    cards: string[];
+    packCost: number;
+};
+
+// MARK: - API Functions
+
+async function buyPack(data: BuyPackRequest): Promise<Result<BuyPackResponse, ApiError>> {
     try {
-        const response = await apiClient.get(`${BASE_URL}/collections`);
+        const response = await apiClient.post(`${BASE_URL}/collections/${data.collectionId}/buy`, data);
 
-        return {
-            collections: response.data.collections.map((collection: any) => ({
-                id: collection.id,
-                name: collection.name,
-                pack_cost: collection.pack_cost,
-                image_url: collection.image_url,
-            })),
-        };
-    } catch {
-        return null;
-    }
-}
-
-async function getCollection(data: GetCollectionRequest): Promise<GetCollectionResponse | null> {
-    try {
-        const response = await apiClient.get(`${BASE_URL}/collections/${data.id}`);
-
-        return {
-            id: response.data.id,
-            name: response.data.name,
-            pack_cost: response.data.pack_cost,
-            drop_config: response.data.drop_config,
-            cards_per_pack: response.data.cards_per_pack,
-            cards: response.data.cards,
-        };
-    } catch {
-        return null;
-    }
-}
-
-async function openCollectionPack(data: OpenCollectionPackRequest): Promise<OpenCollectionPackResponse | null> {
-    try {
-        const response = await apiClient.post(`${BASE_URL}/collections/${data.id}/open-pack`, {});
-
-        return {
+        return Result.ok({
             cards: response.data.cards.map((card: any) => ({
                 id: card.id,
                 name: card.name,
                 image_url: card.image_url,
             })),
-        };
-    } catch {
-        return null;
+        });
+    } catch (error: any) {
+        return Result.error(error.response.data);
     }
 }
+
+async function getCollectionsList(): Promise<Result<GetCollectionsListResponse, ApiError>> {
+    try {
+        const response = await apiClient.get(`${BASE_URL}/collections/list`);
+
+        return Result.ok({
+            collections: response.data.collections.map((collection: any) => ({
+                id: collection.id,
+                name: collection.name,
+            })),
+        });
+    } catch (error: any) {
+        return Result.error(error.response.data);
+    }
+}
+
+async function getCollection(data: GetCollectionRequest): Promise<Result<GetCollectionResponse, ApiError>> {
+    try {
+        const response = await apiClient.get(`${BASE_URL}/collections/${data.id}`,);
+        return Result.ok({
+            cards: response.data.cards,
+            id: response.data.id,
+            name: response.data.name,
+            packCost: response.data.pack_cost,
+        });
+    } catch (error: any) {
+        return Result.error(error.response.data);
+    }
+}
+
+export const collectionsApi = {
+    buyPack,
+    getCollectionsList,
+    getCollection,
+};

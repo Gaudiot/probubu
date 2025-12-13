@@ -34,12 +34,12 @@ type ResetPasswordRequest = {
 // MARK: - Response Payloads
 
 type LoginResponse = {
-    accessToekn: string;
+    accessToken: string;
     refreshToken: string;
 };
 
 type RegisterResponse = {
-    accessToekn: string;
+    accessToken: string;
     refreshToken: string;
 };
 
@@ -51,7 +51,7 @@ type ResetPasswordResponse = {
     success: boolean;
 };
 
-// MARK: - Auth API Functions
+// MARK: - API Functions
 
 async function logout(): Promise<Result<void, ApiError>> {
     try {
@@ -72,7 +72,7 @@ async function login(data: LoginRequest): Promise<Result<LoginResponse, ApiError
         const response = await apiClient.post(`${BASE_URL}/login`, data);
 
         return Result.ok({
-            accessToekn: response.data.access_token,
+            accessToken: response.data.access_token,
             refreshToken: response.data.refresh_token,
         });
     } catch (error: any) {
@@ -89,7 +89,7 @@ async function register(data: RegisterRequest): Promise<Result<RegisterResponse,
         const response = await apiClient.post(`${BASE_URL}/register`, data);
 
         return Result.ok({
-            accessToekn: response.data.access_token,
+            accessToken: response.data.access_token,
             refreshToken: response.data.refresh_token,
         });
     } catch (error: any) {

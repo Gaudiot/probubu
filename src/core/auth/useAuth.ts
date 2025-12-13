@@ -17,18 +17,25 @@ export function useAuth() {
         throw new Error('useAuth must be used within an AuthProvider');
     }
 
+    // Private function to clear all tokens
+    const clearTokens = useCallback(() => {
+        context.clearAuth();
+        authService.removeRefreshToken();
+    }, [context]);
+
     const logout = useCallback(() => {
         authApi.logout().then((result) => {
             if (result.isOk()) {
-                authService.removeRefreshToken();
+                clearTokens();
             }
         })
-    }, [])
+    }, [clearTokens])
 
     const login = useCallback((email: string, password: string) => {
         authApi.login({ email, password }).then((result) => {
             result.match(
                 (data) => {
+                    context.setAccessToken(data.accessToken);
                     authService.setRefreshToken(data.refreshToken);
                 },
                 (error) => {
@@ -36,12 +43,13 @@ export function useAuth() {
                 }
             )
         })
-    }, [])
+    }, [context])
 
     const register = useCallback((email: string, username: string, password: string) => {
         authApi.register({ email, username, password }).then((result) => {
             result.match(
                 (data) => {
+                    context.setAccessToken(data.accessToken);
                     authService.setRefreshToken(data.refreshToken);
                 },
                 (error) => {
@@ -49,13 +57,13 @@ export function useAuth() {
                 }
             )
         })
-    }, [])
+    }, [context])
 
     const forgotPassword = useCallback((email: string) => {
         authApi.forgotPassword({ email }).then((result) => {
             result.match(
                 (data) => {
-                    authService.removeRefreshToken();
+                    clearTokens();
                     console.log(data);
                 },
                 (error) => {
@@ -63,13 +71,13 @@ export function useAuth() {
                 }
             )
         })
-    }, [])
+    }, [clearTokens])
 
     const resetPassword = useCallback((resetPasswordToken: string, newPassword: string) => {
         authApi.resetPassword({ resetPasswordToken, newPassword }).then((result) => {
             result.match(
                 (data) => {
-                    authService.removeRefreshToken();
+                    clearTokens();
                     console.log(data);
                 },
                 (error) => {
@@ -77,7 +85,7 @@ export function useAuth() {
                 }
             )
         })
-    }, [])
+    }, [clearTokens])
 
     return {
         context,
