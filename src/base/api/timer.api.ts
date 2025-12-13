@@ -1,42 +1,45 @@
 import axios from "axios";
 import { apiClient } from "./axios-instance.api";
+import { Result } from "@/core/types/result";
+import { ApiError } from "next/dist/server/api-utils";
 
 const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
 
-type StartTimerResponse = {
-    success: boolean;
+// MARK: - Response Payloads
+
+type StartTimerResponse = {};
+
+type StopTimerResponse = {
+    coinsEarned: number;
+    secondsElapsed: number;
 };
 
-type FinishTimerResponse = {
-    success: boolean;
-};
+// MARK: - API Functions
 
-async function startTimer(): Promise<StartTimerResponse> {
+async function startTimer(): Promise<Result<StartTimerResponse, ApiError>> {
     try {
-        const response = await apiClient.post(`${BASE_URL}/startTimer`, {});
+        await apiClient.post(`${BASE_URL}/timer/start`, {});
 
-        return {
-            success: !!response.data.success,
-            // ...outros campos podem ser retornados aqui futuramente
-        };
-    } catch {
-        return { success: false };
+        return Result.ok({});
+    } catch (error: any) {
+        return Result.error(error.response.data);
     }
 }
 
-async function finishTimer(): Promise<FinishTimerResponse> {
+async function stopTimer(): Promise<Result<StopTimerResponse, ApiError>> {
     try {
-        const response = await apiClient.post(`${BASE_URL}/finishTimer`, {});
+        const response = await apiClient.post(`${BASE_URL}/timer/stop`, {});
 
-        return {
-            success: !!response.data.success,
-        };
-    } catch {
-        return { success: false };
+        return Result.ok({
+            coinsEarned: response.data.coins_earned,
+            secondsElapsed: response.data.seconds_elapsed,
+        });
+    } catch (error: any) {
+        return Result.error(error.response.data);
     }
 }
 
 export const timerApi = {
     startTimer,
-    finishTimer,
+    stopTimer,
 };

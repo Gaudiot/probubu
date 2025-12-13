@@ -27,7 +27,7 @@ export function useTimer() {
     try {
       const response = await timerApi.startTimer();
 
-      if (response.success) {
+      if (response.isOk()) {
         setSeconds(0);
         setIsRunning(true);
       } else {
@@ -46,9 +46,9 @@ export function useTimer() {
     setLoading(true);
 
     try {
-      const response = await timerApi.finishTimer();
+      const response = await timerApi.stopTimer();
 
-      if (response.success) {
+      if (response.isOk()) {
         setIsRunning(false);
       } else {
         setError('Erro ao parar o timer.');
