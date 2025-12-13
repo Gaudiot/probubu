@@ -13,7 +13,7 @@ export function useRegisterForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { setAccessToken } = useAuth();
+  const { register } = useAuth();
 
   const validatePasswords = useCallback(() => {
     if (password !== confirmPassword) {
@@ -34,33 +34,11 @@ export function useRegisterForm() {
 
       setLoading(true);
 
-      try {
-        const response = await authApi.register({
-          email,
-          username,
-          senha: password
-        });
+      register(email, username, password)
 
-        if (response) {
-          // Save access_token to React Context
-          setAccessToken(response.access_token);
-
-          // Save refresh_token to secure cookie
-          authService.setRefreshToken(response.refresh_token);
-
-          console.log('Cadastro realizado com sucesso!');
-          // TO-DO: Redirecionar usuário
-        } else {
-          setError('Erro ao realizar cadastro. Tente novamente.');
-        }
-      } catch (err) {
-        setError('Erro ao tentar cadastrar. Tente novamente.');
-        console.error('Erro no cadastro:', err);
-      } finally {
-        setLoading(false);
-      }
+      setLoading(false);
     },
-    [email, username, password, validatePasswords, setAccessToken]
+    [email, username, password, validatePasswords, register]
   );
 
   const resetForm = useCallback(() => {

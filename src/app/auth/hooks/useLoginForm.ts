@@ -11,7 +11,7 @@ export function useLoginForm() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const { setAccessToken } = useAuth();
+    const { login } = useAuth();
 
     const handleSubmit = useCallback(
         async (e: React.FormEvent) => {
@@ -19,29 +19,11 @@ export function useLoginForm() {
             setError(null);
             setLoading(true);
 
-            try {
-                const response = await authApi.login({ email, senha: password });
+            login(email, password)
 
-                if (response) {
-                    // Save access_token to React Context
-                    setAccessToken(response.access_token);
-
-                    // Save refresh_token to secure cookie
-                    authService.setRefreshToken(response.refresh_token);
-
-                    console.log('Login realizado com sucesso!');
-                    // TO-DO: Redirecionar usuário
-                } else {
-                    setError('Email ou senha incorretos.');
-                }
-            } catch (err) {
-                setError('Erro ao tentar fazer login. Tente novamente.');
-                console.error('Erro no login:', err);
-            } finally {
-                setLoading(false);
-            }
+            setLoading(false);
         },
-        [email, password, setAccessToken]
+        [email, password, login]
     );
 
     const resetForm = useCallback(() => {

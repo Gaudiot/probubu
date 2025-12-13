@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuth } from '@/core/auth/useAuth';
-import { useLogout } from '@/core/auth/useLogout';
 import { authService } from '@/core/auth/authService';
 
 /**
@@ -9,8 +8,8 @@ import { authService } from '@/core/auth/authService';
  * This component displays the user's authentication status
  */
 export function UserProfile() {
-    const { accessToken, isAuthenticated } = useAuth();
-    const { logout } = useLogout();
+    const { context, logout } = useAuth();
+    const { isAuthenticated, accessToken } = context;
 
     const hasRefreshToken = authService.hasRefreshToken();
 
