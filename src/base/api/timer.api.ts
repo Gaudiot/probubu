@@ -1,4 +1,3 @@
-import axios from "axios";
 import { apiClient } from "./axios-instance.api";
 import { Result } from "@/core/types/result";
 import { ApiError } from "next/dist/server/api-utils";
