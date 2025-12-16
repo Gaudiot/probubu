@@ -1,21 +1,40 @@
 'use client';
 
-import { TextField, Button, Alert, Box } from '@mui/material';
-import { useLoginForm } from '../hooks/useLoginForm';
+import { useState } from 'react';
+import { TextField, Button, Box, Typography, Link } from '@mui/material';
 
-export function LoginForm() {
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    error,
-    loading,
-    handleSubmit,
-  } = useLoginForm();
+interface LoginFormProps {
+  onSwitchToRegister: () => void;
+  onSwitchToForgotPassword: () => void;
+  onSubmit: ({ email, password }: { email: string, password: string }) => void
+}
+
+export function LoginForm({ onSwitchToForgotPassword, onSwitchToRegister, onSubmit }: LoginFormProps) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ email, password })
+  };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        maxWidth: 400,
+        margin: '0 auto',
+        padding: 4,
+      }}
+    >
+      <Typography variant="h4" component="h1" textAlign="center" gutterBottom>
+        Login
+      </Typography>
+
       <TextField
         label="Email"
         type="email"
@@ -24,7 +43,6 @@ export function LoginForm() {
         required
         fullWidth
         autoComplete="email"
-        variant="outlined"
       />
 
       <TextField
@@ -35,21 +53,42 @@ export function LoginForm() {
         required
         fullWidth
         autoComplete="current-password"
-        variant="outlined"
       />
-
-      {error && <Alert severity="error">{error}</Alert>}
 
       <Button
         type="submit"
         variant="contained"
-        fullWidth
-        disabled={loading}
         size="large"
-        sx={{ mt: 1, py: 1.5 }}
+        fullWidth
+        sx={{ mt: 2 }}
       >
-        {loading ? 'Entrando...' : 'Entrar'}
+        Entrar
       </Button>
+
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
+        <Link
+          component="button"
+          type="button"
+          onClick={onSwitchToForgotPassword}
+          underline="hover"
+          sx={{ textAlign: 'center', cursor: 'pointer' }}
+        >
+          Esqueci minha senha
+        </Link>
+
+        <Typography variant="body2" textAlign="center" sx={{ mt: 1 }}>
+          Não tem uma conta?{' '}
+          <Link
+            component="button"
+            type="button"
+            onClick={onSwitchToRegister}
+            underline="hover"
+            sx={{ cursor: 'pointer' }}
+          >
+            Criar conta
+          </Link>
+        </Typography>
+      </Box>
     </Box>
   );
 }
