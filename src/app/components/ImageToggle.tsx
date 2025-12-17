@@ -8,11 +8,18 @@ const IMAGE_URLS = {
     active: 'https://picsum.photos/id/935/200/300',
 };
 
-export function ImageToggle() {
+type ImageToggleProps = {
+    imageUrls: {
+        inactive: string
+        active: string
+    }
+}
+
+export function ImageToggle({ imageUrls }: ImageToggleProps) {
     const { formattedTime, isRunning, startTimer, stopTimer } = useTimer();
 
-    const currentImage = isRunning ? IMAGE_URLS.active : IMAGE_URLS.inactive;
-    const buttonLabel = isRunning ? 'Stop' : 'Start';
+    const currentImage = isRunning ? imageUrls.active : imageUrls.inactive;
+    const buttonLabel = isRunning ? 'Stop' : "Start";
     const buttonAction = isRunning ? stopTimer : startTimer;
 
     return (

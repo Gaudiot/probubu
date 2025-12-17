@@ -52,7 +52,11 @@ async function buyPack(data: BuyPackRequest): Promise<Result<BuyPackResponse, Ap
             })),
         });
     } catch (error: any) {
-        return Result.error(error.response.data);
+        return Result.error({
+            name: 'BuyPackError',
+            statusCode: error.response?.status,
+            message: error.response?.data?.message || 'Error while buying pack',
+        });
     }
 }
 
@@ -67,7 +71,11 @@ async function getCollectionsList(): Promise<Result<GetCollectionsListResponse, 
             })),
         });
     } catch (error: any) {
-        return Result.error(error.response.data);
+        return Result.error({
+            name: 'GetCollectionsListError',
+            statusCode: error.response?.status,
+            message: error.response?.data?.message || 'Error while getting collections list',
+        });
     }
 }
 
@@ -81,7 +89,11 @@ async function getCollection(data: GetCollectionRequest): Promise<Result<GetColl
             packCost: response.data.pack_cost,
         });
     } catch (error: any) {
-        return Result.error(error.response.data);
+        return Result.error({
+            name: 'GetCollectionError',
+            statusCode: error.response?.status,
+            message: error.response?.data?.message || 'Error while getting collection',
+        });
     }
 }
 

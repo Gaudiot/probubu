@@ -28,7 +28,12 @@ async function getUserPerformance(): Promise<Result<GetUserPerformanceResponse, 
             })),
         });
     } catch (error: any) {
-        return Result.error(error.response.data);
+        return Result.error({
+            name: 'GetUserPerformanceError',
+            statusCode: error.response?.status,
+            message: error.response?.data?.message || 'Error while getting user performance',
+            details: error.response?.data,
+        });
     }
 }
 

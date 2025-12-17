@@ -1,13 +1,8 @@
+import { ApiError } from "next/dist/server/api-utils";
 import { apiClient } from "./axios-instance.api";
 import { Result } from "@/core/types/result";
 
 const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
-
-type ApiError = {
-    message: string;
-    statusCode?: number;
-    details?: unknown;
-};
 
 // MARK: - Request Payloads
 
@@ -60,6 +55,7 @@ async function logout(): Promise<Result<void, ApiError>> {
         return Result.ok(undefined);
     } catch (error: any) {
         return Result.error({
+            name: 'LogoutError',
             message: error.response?.data?.message || 'Error while logging out',
             statusCode: error.response?.status,
             details: error.response?.data,
@@ -77,6 +73,7 @@ async function login(data: LoginRequest): Promise<Result<LoginResponse, ApiError
         });
     } catch (error: any) {
         return Result.error({
+            name: 'LoginError',
             message: error.response?.data?.message || 'Error while logging in',
             statusCode: error.response?.status,
             details: error.response?.data,
@@ -94,6 +91,7 @@ async function register(data: RegisterRequest): Promise<Result<RegisterResponse,
         });
     } catch (error: any) {
         return Result.error({
+            name: 'RegisterError',
             message: error.response?.data?.message || 'Error while registering',
             statusCode: error.response?.status,
             details: error.response?.data,
@@ -110,6 +108,7 @@ async function forgotPassword(data: ForgotPasswordRequest): Promise<Result<Forgo
         });
     } catch (error: any) {
         return Result.error({
+            name: 'ForgotPasswordError',
             message: error.response?.data?.message || 'Error while sending forgot password email',
             statusCode: error.response?.status,
             details: error.response?.data,
@@ -126,6 +125,7 @@ async function resetPassword(data: ResetPasswordRequest): Promise<Result<ResetPa
         });
     } catch (error: any) {
         return Result.error({
+            name: 'ResetPasswordError',
             message: error.response?.data?.message || 'Error while resetting password',
             statusCode: error.response?.status,
             details: error.response?.data,

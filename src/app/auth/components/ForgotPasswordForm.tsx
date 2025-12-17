@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { TextField, Button, Box, Typography, Link, CircularProgress } from '@mui/material';
-import { AuthPageState } from '../hooks/useAuthPage';
+import { AuthPageState } from '../hooks/useAuthPage.hook';
 
 interface ForgotPasswordFormProps {
     onSwitchToLogin: () => void;

@@ -33,6 +33,8 @@ export function useTimer() {
       } else {
         setError('Erro ao iniciar o timer.');
       }
+      setSeconds(0);
+      setIsRunning(true);
     } catch (err) {
       setError('Erro ao iniciar o timer. Tente novamente.');
       console.error('Erro ao iniciar timer:', err);
@@ -53,6 +55,7 @@ export function useTimer() {
       } else {
         setError('Erro ao parar o timer.');
       }
+      setIsRunning(false);
     } catch (err) {
       setError('Erro ao parar o timer. Tente novamente.');
       console.error('Erro ao parar timer:', err);
