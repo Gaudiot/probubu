@@ -5,7 +5,6 @@ import { AuthContext } from './AuthContext';
 import { authApi } from '@/base/api/auth.api';
 import { authService } from './authService';
 import { Result } from '../types/result';
-import { ApiError } from 'next/dist/server/api-utils';
 import { AUTH_ERROR, AuthErrorType } from './authErrors';
 
 /**
@@ -42,14 +41,15 @@ export function useAuth() {
         email = email.trim()
         password = password.trim()
 
-        const { data, isError: isLoginError } = await authApi.login({ email, password })
+        const loginResult = await authApi.login({ email, password })
 
-        if (isLoginError()) {
+        if (loginResult.isError()) {
             return Result.error(AUTH_ERROR.LOGIN)
         }
+        const { accessToken, refreshToken } = loginResult.data
 
-        context.setAccessToken(data.accessToken)
-        authService.setRefreshToken(data.refreshToken)
+        context.setAccessToken(accessToken)
+        authService.setRefreshToken(refreshToken)
 
         return Result.ok(true)
     }, [context])
@@ -64,14 +64,16 @@ export function useAuth() {
             return Result.error(AUTH_ERROR.REGISTER_NOT_EQUAL_PASSWORDS)
         }
 
-        const { data, isError: isRegisterError } = await authApi.register({ email, username, password })
+        const registerResult = await authApi.register({ email, username, password })
 
-        if (isRegisterError()) {
+        if (registerResult.isError()) {
             return Result.error(AUTH_ERROR.REGISTER)
         }
 
-        context.setAccessToken(data.accessToken)
-        authService.setRefreshToken(data.refreshToken)
+        const { accessToken, refreshToken } = registerResult.data
+
+        context.setAccessToken(accessToken)
+        authService.setRefreshToken(refreshToken)
 
         return Result.ok(true)
     }, [context])
@@ -79,9 +81,9 @@ export function useAuth() {
     const forgotPassword = useCallback(async (email: string): Promise<Result<boolean, AuthErrorType>> => {
         email = email.trim()
 
-        const { isError: isForgotPasswordError } = await authApi.forgotPassword({ email })
+        const forgotPasswordResult = await authApi.forgotPassword({ email })
 
-        if (isForgotPasswordError()) {
+        if (forgotPasswordResult.isError()) {
             return Result.error(AUTH_ERROR.FORGOT_PASSWORD)
         }
 
@@ -94,9 +96,9 @@ export function useAuth() {
         resetPasswordToken = resetPasswordToken.trim()
         newPassword = newPassword.trim()
 
-        const { isError: isResetPasswordError } = await authApi.resetPassword({ resetPasswordToken, newPassword })
+        const resetPasswordResult = await authApi.resetPassword({ resetPasswordToken, newPassword })
 
-        if (isResetPasswordError()) {
+        if (resetPasswordResult.isError()) {
             return Result.error(AUTH_ERROR.RESET_PASSWORD)
         }
 

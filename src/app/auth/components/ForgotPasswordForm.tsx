@@ -31,7 +31,7 @@ export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubm
             }}
         >
             <Typography variant="h4" component="h1" textAlign="center" gutterBottom>
-                Login
+                Forgot Password
             </Typography>
 
             <TextField

@@ -5,15 +5,12 @@ import { RegisterForm } from './components/RegisterForm';
 import { AUTH_FORM, AuthForm } from './types/authTypes';
 import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import useAuthPage from './hooks/useAuthPage';
+import { Navbar } from '@/components/navbar';
 
-interface AuthFormProps {
-    authFormSelected: AuthForm;
-}
+function AuthFormComponent() {
+    const { currentAuthForm, handleLogin, handleRegister, handleForgotPassword, switchToLoginForm, switchToRegisterForm, switchToForgotPasswordForm } = useAuthPage()
 
-function AuthFormComponent({ authFormSelected }: AuthFormProps) {
-    const { handleLogin, handleRegister, handleForgotPassword, switchToLoginForm, switchToRegisterForm, switchToForgotPasswordForm } = useAuthPage()
-
-    switch (authFormSelected) {
+    switch (currentAuthForm) {
         case AUTH_FORM.LOGIN:
             return <LoginForm onSubmit={handleLogin} onSwitchToForgotPassword={switchToForgotPasswordForm} onSwitchToRegister={switchToRegisterForm} />;
         case AUTH_FORM.REGISTER:
@@ -24,9 +21,12 @@ function AuthFormComponent({ authFormSelected }: AuthFormProps) {
 }
 
 function AuthPage() {
-    const { currentAuthForm } = useAuthPage()
-
-    return <AuthFormComponent authFormSelected={currentAuthForm} />;
+    return (
+        <>
+            <Navbar />
+            <AuthFormComponent />
+        </>
+    );
 }
 
 export default AuthPage;
