@@ -26,9 +26,9 @@ export function useAuth() {
     }, [context]);
 
     const logout = useCallback(async () => {
-        const { isError: isLogoutError } = await authApi.logout()
+        const logoutResult = await authApi.logout()
 
-        if (isLogoutError()) {
+        if (logoutResult.isError()) {
             return Result.error(AUTH_ERROR.LOGOUT)
         }
 

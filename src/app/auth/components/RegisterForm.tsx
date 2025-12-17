@@ -46,7 +46,7 @@ export function RegisterForm({ onSwitchToLogin, onSubmit, pageState }: RegisterF
         onChange={(e) => setUsername(e.target.value)}
         required
         fullWidth
-        autoComplete="email"
+        autoComplete="username"
         disabled={isLoading}
       />
 
@@ -79,7 +79,7 @@ export function RegisterForm({ onSwitchToLogin, onSubmit, pageState }: RegisterF
         onChange={(e) => setConfirmPassword(e.target.value)}
         required
         fullWidth
-        autoComplete="current-password"
+        autoComplete="repeat-password"
         disabled={isLoading}
       />
 

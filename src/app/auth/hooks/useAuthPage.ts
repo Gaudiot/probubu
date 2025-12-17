@@ -29,7 +29,6 @@ function useAuthPage() {
     const handleLogin = useCallback(
         async ({ email, password }: { email: string, password: string }) => {
             setAuthPageState(prev => ({ ...prev, isLoading: true }))
-            await new Promise(resolve => setTimeout(resolve, 3000))
             await login(email, password)
             setAuthPageState(prev => ({ ...prev, isLoading: false }))
         },

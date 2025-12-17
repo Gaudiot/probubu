@@ -60,7 +60,7 @@ export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubm
                 {isLoading ? (
                     <CircularProgress size={24} color="inherit" />
                 ) : (
-                    'Entrar'
+                    'Recuperar senha'
                 )}
             </Button>
 
@@ -71,7 +71,7 @@ export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubm
                         type="button"
                         onClick={onSwitchToLogin}
                         underline="hover"
-                        sx={{ textAlign: 'center', cursor: isLoading ? 'not-allowed' : 'pointer' }}
+                        sx={{ textAlign: 'center' }}
                     >
                         Tenho conta
                     </Link>
@@ -83,7 +83,6 @@ export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubm
                             type="button"
                             onClick={onSwitchToRegister}
                             underline="hover"
-                            sx={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
                         >
                             Criar conta
                         </Link>
