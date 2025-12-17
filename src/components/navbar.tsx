@@ -53,12 +53,16 @@ function NavBarRightmostComponent() {
     );
 }
 
-export function Navbar() {
+interface NavbarProps {
+    hideRightmostComponent?: boolean
+}
+
+export function Navbar({ hideRightmostComponent }: NavbarProps) {
     return (
         <nav className="sticky top-0 z-50 w-full bg-white dark:bg-gray-900 shadow-md">
             <div className="flex items-center justify-between px-6 py-3">
                 <NavBarLeftmostComponent />
-                <NavBarRightmostComponent />
+                {!hideRightmostComponent && <NavBarRightmostComponent />}
             </div>
         </nav>
     );

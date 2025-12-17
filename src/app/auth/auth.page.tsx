@@ -24,7 +24,7 @@ function AuthFormComponent() {
 function AuthPage() {
     return (
         <>
-            <Navbar />
+            <Navbar hideRightmostComponent />
             <AuthFormComponent />
         </>
     );
