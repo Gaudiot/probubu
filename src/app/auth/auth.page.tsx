@@ -8,15 +8,16 @@ import useAuthPage from './hooks/useAuthPage';
 import { Navbar } from '@/components/navbar';
 
 function AuthFormComponent() {
-    const { currentAuthForm, handleLogin, handleRegister, handleForgotPassword, switchToLoginForm, switchToRegisterForm, switchToForgotPasswordForm } = useAuthPage()
+    const { authPageState, handleLogin, handleRegister, handleForgotPassword, switchToLoginForm, switchToRegisterForm, switchToForgotPasswordForm } = useAuthPage()
+    const { currentAuthForm } = authPageState
 
     switch (currentAuthForm) {
         case AUTH_FORM.LOGIN:
-            return <LoginForm onSubmit={handleLogin} onSwitchToForgotPassword={switchToForgotPasswordForm} onSwitchToRegister={switchToRegisterForm} />;
+            return <LoginForm pageState={authPageState} onSubmit={handleLogin} onSwitchToForgotPassword={switchToForgotPasswordForm} onSwitchToRegister={switchToRegisterForm} />;
         case AUTH_FORM.REGISTER:
-            return <RegisterForm onSwitchToLogin={switchToLoginForm} onSubmit={handleRegister} />;
+            return <RegisterForm pageState={authPageState} onSwitchToLogin={switchToLoginForm} onSubmit={handleRegister} />;
         case AUTH_FORM.FORGOT_PASSWORD:
-            return <ForgotPasswordForm onSwitchToLogin={switchToLoginForm} onSwitchToRegister={switchToRegisterForm} onSubmit={handleForgotPassword} />;
+            return <ForgotPasswordForm pageState={authPageState} onSwitchToLogin={switchToLoginForm} onSwitchToRegister={switchToRegisterForm} onSubmit={handleForgotPassword} />;
     }
 }
 

@@ -1,14 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { TextField, Button, Box, Typography, Link } from '@mui/material';
+import { TextField, Button, Box, Typography, Link, CircularProgress } from '@mui/material';
+import { AuthPageState } from '../hooks/useAuthPage';
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void;
-  onSubmit: ({ username, email, password, confirmPassword }: { username: string, email: string, password: string, confirmPassword: string }) => void
+  onSubmit: ({ username, email, password, confirmPassword }: { username: string, email: string, password: string, confirmPassword: string }) => void,
+  pageState: AuthPageState
 }
 
-export function RegisterForm({ onSwitchToLogin, onSubmit }: RegisterFormProps) {
+export function RegisterForm({ onSwitchToLogin, onSubmit, pageState }: RegisterFormProps) {
+  const { isLoading } = pageState;
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,6 +47,7 @@ export function RegisterForm({ onSwitchToLogin, onSubmit }: RegisterFormProps) {
         required
         fullWidth
         autoComplete="email"
+        disabled={isLoading}
       />
 
       <TextField
@@ -53,6 +58,7 @@ export function RegisterForm({ onSwitchToLogin, onSubmit }: RegisterFormProps) {
         required
         fullWidth
         autoComplete="email"
+        disabled={isLoading}
       />
 
       <TextField
@@ -63,6 +69,7 @@ export function RegisterForm({ onSwitchToLogin, onSubmit }: RegisterFormProps) {
         required
         fullWidth
         autoComplete="current-password"
+        disabled={isLoading}
       />
 
       <TextField
@@ -73,6 +80,7 @@ export function RegisterForm({ onSwitchToLogin, onSubmit }: RegisterFormProps) {
         required
         fullWidth
         autoComplete="current-password"
+        disabled={isLoading}
       />
 
       <Button
@@ -81,24 +89,31 @@ export function RegisterForm({ onSwitchToLogin, onSubmit }: RegisterFormProps) {
         size="large"
         fullWidth
         sx={{ mt: 2 }}
+        disabled={isLoading}
       >
-        Entrar
+        {isLoading ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : (
+          'Criar conta'
+        )}
       </Button>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
-        <Typography variant="body2" textAlign="center" sx={{ mt: 1 }}>
-          Já tem uma conta?{' '}
-          <Link
-            component="button"
-            type="button"
-            onClick={onSwitchToLogin}
-            underline="hover"
-            sx={{ cursor: 'pointer' }}
-          >
-            Entrar
-          </Link>
-        </Typography>
-      </Box>
+      {!isLoading && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
+          <Typography variant="body2" textAlign="center" sx={{ mt: 1 }}>
+            Já tem uma conta?{' '}
+            <Link
+              component="button"
+              type="button"
+              onClick={onSwitchToLogin}
+              underline="hover"
+              sx={{ cursor: 'pointer' }}
+            >
+              Entrar
+            </Link>
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 }

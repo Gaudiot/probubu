@@ -1,20 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { TextField, Button, Box, Typography, Link } from '@mui/material';
+import { TextField, Button, Box, Typography, Link, CircularProgress } from '@mui/material';
+import { AuthPageState } from '../hooks/useAuthPage';
 
 interface ForgotPasswordFormProps {
     onSwitchToLogin: () => void;
     onSwitchToRegister: () => void;
-    onSubmit: ({ email }: { email: string }) => void
+    onSubmit: ({ email }: { email: string }) => void,
+    pageState: AuthPageState
 }
 
-export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubmit }: ForgotPasswordFormProps) {
+export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubmit, pageState }: ForgotPasswordFormProps) {
+    const { isLoading } = pageState;
+
     const [email, setEmail] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit({ email })
+        onSubmit({ email });
     };
 
     return (
@@ -42,6 +46,7 @@ export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubm
                 required
                 fullWidth
                 autoComplete="email"
+                disabled={isLoading}
             />
 
             <Button
@@ -50,34 +55,41 @@ export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubm
                 size="large"
                 fullWidth
                 sx={{ mt: 2 }}
+                disabled={isLoading}
             >
-                Entrar
+                {isLoading ? (
+                    <CircularProgress size={24} color="inherit" />
+                ) : (
+                    'Entrar'
+                )}
             </Button>
 
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
-                <Link
-                    component="button"
-                    type="button"
-                    onClick={onSwitchToLogin}
-                    underline="hover"
-                    sx={{ textAlign: 'center', cursor: 'pointer' }}
-                >
-                    Tenho conta
-                </Link>
-
-                <Typography variant="body2" textAlign="center" sx={{ mt: 1 }}>
-                    Não tem uma conta?{' '}
+            {!isLoading && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
                     <Link
                         component="button"
                         type="button"
-                        onClick={onSwitchToRegister}
+                        onClick={onSwitchToLogin}
                         underline="hover"
-                        sx={{ cursor: 'pointer' }}
+                        sx={{ textAlign: 'center', cursor: isLoading ? 'not-allowed' : 'pointer' }}
                     >
-                        Criar conta
+                        Tenho conta
                     </Link>
-                </Typography>
-            </Box>
+
+                    <Typography variant="body2" textAlign="center" sx={{ mt: 1 }}>
+                        Não tem uma conta?{' '}
+                        <Link
+                            component="button"
+                            type="button"
+                            onClick={onSwitchToRegister}
+                            underline="hover"
+                            sx={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
+                        >
+                            Criar conta
+                        </Link>
+                    </Typography>
+                </Box>
+            )}
         </Box>
     );
 }

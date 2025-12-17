@@ -2,7 +2,7 @@ import { useState, useCallback } from "react"
 import { AUTH_FORM, AuthForm } from "../types/authTypes"
 import { useAuth } from "@/core/auth"
 
-type AuthPageState = {
+export type AuthPageState = {
     currentAuthForm: AuthForm
     isLoading: boolean
     hasError: boolean
@@ -10,7 +10,6 @@ type AuthPageState = {
 }
 
 function useAuthPage() {
-    const [currentAuthForm, setCurrentAuthForm] = useState<AuthForm>(AUTH_FORM.LOGIN)
     const [authPageState, setAuthPageState] = useState<AuthPageState>({
         currentAuthForm: AUTH_FORM.LOGIN,
         isLoading: false,
@@ -20,9 +19,9 @@ function useAuthPage() {
 
     // MARK: - Navigation
 
-    const switchToLoginForm = useCallback(() => setCurrentAuthForm(AUTH_FORM.LOGIN), [])
-    const switchToRegisterForm = useCallback(() => setCurrentAuthForm(AUTH_FORM.REGISTER), [])
-    const switchToForgotPasswordForm = useCallback(() => setCurrentAuthForm(AUTH_FORM.FORGOT_PASSWORD), [])
+    const switchToLoginForm = useCallback(() => setAuthPageState(prev => ({ ...prev, currentAuthForm: AUTH_FORM.LOGIN })), [])
+    const switchToRegisterForm = useCallback(() => setAuthPageState(prev => ({ ...prev, currentAuthForm: AUTH_FORM.REGISTER })), [])
+    const switchToForgotPasswordForm = useCallback(() => setAuthPageState(prev => ({ ...prev, currentAuthForm: AUTH_FORM.FORGOT_PASSWORD })), [])
 
     // MARK: - User Actions
     const { login, register, forgotPassword } = useAuth()
@@ -30,6 +29,7 @@ function useAuthPage() {
     const handleLogin = useCallback(
         async ({ email, password }: { email: string, password: string }) => {
             setAuthPageState(prev => ({ ...prev, isLoading: true }))
+            await new Promise(resolve => setTimeout(resolve, 3000))
             await login(email, password)
             setAuthPageState(prev => ({ ...prev, isLoading: false }))
         },
@@ -56,7 +56,6 @@ function useAuthPage() {
 
     return {
         authPageState,
-        currentAuthForm,
         switchToLoginForm,
         switchToRegisterForm,
         switchToForgotPasswordForm,
