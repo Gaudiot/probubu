@@ -40,9 +40,14 @@ type GetCollectionResponse = {
 
 // MARK: - API Functions
 
-async function buyPack(data: BuyPackRequest): Promise<Result<BuyPackResponse, ApiError>> {
+async function buyPack(
+    data: BuyPackRequest,
+): Promise<Result<BuyPackResponse, ApiError>> {
     try {
-        const response = await apiClient.post(`${BASE_URL}/collections/${data.collectionId}/buy`, data);
+        const response = await apiClient.post(
+            `${BASE_URL}/collections/${data.collectionId}/buy`,
+            data,
+        );
 
         return Result.ok({
             cards: response.data.cards.map((card: any) => ({
@@ -53,14 +58,16 @@ async function buyPack(data: BuyPackRequest): Promise<Result<BuyPackResponse, Ap
         });
     } catch (error: any) {
         return Result.error({
-            name: 'BuyPackError',
+            name: "BuyPackError",
             statusCode: error.response?.status,
-            message: error.response?.data?.message || 'Error while buying pack',
+            message: error.response?.data?.message || "Error while buying pack",
         });
     }
 }
 
-async function getCollectionsList(): Promise<Result<GetCollectionsListResponse, ApiError>> {
+async function getCollectionsList(): Promise<
+    Result<GetCollectionsListResponse, ApiError>
+> {
     try {
         const response = await apiClient.get(`${BASE_URL}/collections/list`);
 
@@ -72,16 +79,22 @@ async function getCollectionsList(): Promise<Result<GetCollectionsListResponse, 
         });
     } catch (error: any) {
         return Result.error({
-            name: 'GetCollectionsListError',
+            name: "GetCollectionsListError",
             statusCode: error.response?.status,
-            message: error.response?.data?.message || 'Error while getting collections list',
+            message:
+                error.response?.data?.message ||
+                "Error while getting collections list",
         });
     }
 }
 
-async function getCollection(data: GetCollectionRequest): Promise<Result<GetCollectionResponse, ApiError>> {
+async function getCollection(
+    data: GetCollectionRequest,
+): Promise<Result<GetCollectionResponse, ApiError>> {
     try {
-        const response = await apiClient.get(`${BASE_URL}/collections/${data.id}`,);
+        const response = await apiClient.get(
+            `${BASE_URL}/collections/${data.id}`,
+        );
         return Result.ok({
             cards: response.data.cards,
             id: response.data.id,
@@ -90,9 +103,11 @@ async function getCollection(data: GetCollectionRequest): Promise<Result<GetColl
         });
     } catch (error: any) {
         return Result.error({
-            name: 'GetCollectionError',
+            name: "GetCollectionError",
             statusCode: error.response?.status,
-            message: error.response?.data?.message || 'Error while getting collection',
+            message:
+                error.response?.data?.message ||
+                "Error while getting collection",
         });
     }
 }

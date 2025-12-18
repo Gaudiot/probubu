@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/core/auth/useAuth';
-import { authService } from '@/core/auth/authService';
+import { useAuth } from "@/core/auth/useAuth";
+import { authService } from "@/core/auth/authService";
 
 /**
  * Example component showing how to use the auth context
@@ -26,7 +26,10 @@ export function UserProfile() {
             <p className="text-green-800 font-semibold">✓ Autenticado</p>
             <div className="text-sm text-gray-600">
                 <p>Access Token: {accessToken?.substring(0, 20)}...</p>
-                <p>Refresh Token: {hasRefreshToken ? '✓ Presente' : '✗ Ausente'}</p>
+                <p>
+                    Refresh Token:{" "}
+                    {hasRefreshToken ? "✓ Presente" : "✗ Ausente"}
+                </p>
             </div>
             <button
                 onClick={logout}
@@ -37,4 +40,3 @@ export function UserProfile() {
         </div>
     );
 }
-

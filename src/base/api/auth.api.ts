@@ -24,7 +24,7 @@ type ForgotPasswordRequest = {
 type ResetPasswordRequest = {
     resetPasswordToken: string;
     newPassword: string;
-}
+};
 
 // MARK: - Response Payloads
 
@@ -55,15 +55,17 @@ async function logout(): Promise<Result<void, ApiError>> {
         return Result.ok(undefined);
     } catch (error: any) {
         return Result.error({
-            name: 'LogoutError',
-            message: error.response?.data?.message || 'Error while logging out',
+            name: "LogoutError",
+            message: error.response?.data?.message || "Error while logging out",
             statusCode: error.response?.status,
             details: error.response?.data,
         });
     }
 }
 
-async function login(data: LoginRequest): Promise<Result<LoginResponse, ApiError>> {
+async function login(
+    data: LoginRequest,
+): Promise<Result<LoginResponse, ApiError>> {
     try {
         const response = await apiClient.post(`${BASE_URL}/login`, data);
 
@@ -73,15 +75,17 @@ async function login(data: LoginRequest): Promise<Result<LoginResponse, ApiError
         });
     } catch (error: any) {
         return Result.error({
-            name: 'LoginError',
-            message: error.response?.data?.message || 'Error while logging in',
+            name: "LoginError",
+            message: error.response?.data?.message || "Error while logging in",
             statusCode: error.response?.status,
             details: error.response?.data,
         });
     }
 }
 
-async function register(data: RegisterRequest): Promise<Result<RegisterResponse, ApiError>> {
+async function register(
+    data: RegisterRequest,
+): Promise<Result<RegisterResponse, ApiError>> {
     try {
         const response = await apiClient.post(`${BASE_URL}/register`, data);
 
@@ -91,42 +95,56 @@ async function register(data: RegisterRequest): Promise<Result<RegisterResponse,
         });
     } catch (error: any) {
         return Result.error({
-            name: 'RegisterError',
-            message: error.response?.data?.message || 'Error while registering',
+            name: "RegisterError",
+            message: error.response?.data?.message || "Error while registering",
             statusCode: error.response?.status,
             details: error.response?.data,
         });
     }
 }
 
-async function forgotPassword(data: ForgotPasswordRequest): Promise<Result<ForgotPasswordResponse, ApiError>> {
+async function forgotPassword(
+    data: ForgotPasswordRequest,
+): Promise<Result<ForgotPasswordResponse, ApiError>> {
     try {
-        const response = await apiClient.post(`${BASE_URL}/forgot-password`, data);
+        const response = await apiClient.post(
+            `${BASE_URL}/forgot-password`,
+            data,
+        );
 
         return Result.ok({
             success: response.data.success,
         });
     } catch (error: any) {
         return Result.error({
-            name: 'ForgotPasswordError',
-            message: error.response?.data?.message || 'Error while sending forgot password email',
+            name: "ForgotPasswordError",
+            message:
+                error.response?.data?.message ||
+                "Error while sending forgot password email",
             statusCode: error.response?.status,
             details: error.response?.data,
         });
     }
 }
 
-async function resetPassword(data: ResetPasswordRequest): Promise<Result<ResetPasswordResponse, ApiError>> {
+async function resetPassword(
+    data: ResetPasswordRequest,
+): Promise<Result<ResetPasswordResponse, ApiError>> {
     try {
-        const response = await apiClient.post(`${BASE_URL}/reset-password`, data);
+        const response = await apiClient.post(
+            `${BASE_URL}/reset-password`,
+            data,
+        );
 
         return Result.ok({
             success: response.data.success,
         });
     } catch (error: any) {
         return Result.error({
-            name: 'ResetPasswordError',
-            message: error.response?.data?.message || 'Error while resetting password',
+            name: "ResetPasswordError",
+            message:
+                error.response?.data?.message ||
+                "Error while resetting password",
             statusCode: error.response?.status,
             details: error.response?.data,
         });

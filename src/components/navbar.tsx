@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useAuth } from '@/core/auth/useAuth';
-import { DollarCircleOutlined, UserOutlined } from '@ant-design/icons';
+import Image from "next/image";
+import Link from "next/link";
+import { useAuth } from "@/core/auth/useAuth";
+import { DollarCircleOutlined, UserOutlined } from "@ant-design/icons";
 
 function NavBarLeftmostComponent() {
     return (
@@ -28,10 +28,18 @@ function NavBarRightmostComponent() {
     if (isAuthenticated) {
         return (
             <div className="flex items-center gap-3">
-                <span className="font-semibold" style={{ fontSize: "30px" }}>13</span>
-                <DollarCircleOutlined style={{ fontSize: '40px' }} className="text-gray-700 dark:text-gray-300" />
+                <span className="font-semibold" style={{ fontSize: "30px" }}>
+                    13
+                </span>
+                <DollarCircleOutlined
+                    style={{ fontSize: "40px" }}
+                    className="text-gray-700 dark:text-gray-300"
+                />
                 <Link href="/auth" className="cursor-pointer">
-                    <UserOutlined style={{ fontSize: '40px' }} className="text-gray-700 dark:text-gray-300" />
+                    <UserOutlined
+                        style={{ fontSize: "40px" }}
+                        className="text-gray-700 dark:text-gray-300"
+                    />
                 </Link>
             </div>
         );
@@ -43,9 +51,7 @@ function NavBarRightmostComponent() {
                 Login
             </Link>
             <Link href="/auth?type=register" className="cursor-pointer">
-                <button
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
-                >
+                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer">
                     Cadastro
                 </button>
             </Link>
@@ -54,7 +60,7 @@ function NavBarRightmostComponent() {
 }
 
 interface NavbarProps {
-    hideRightmostComponent?: boolean
+    hideRightmostComponent?: boolean;
 }
 
 export function Navbar({ hideRightmostComponent }: NavbarProps) {
@@ -67,4 +73,3 @@ export function Navbar({ hideRightmostComponent }: NavbarProps) {
         </nav>
     );
 }
-

@@ -1,20 +1,32 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { TextField, Button, Box, Typography, Link, CircularProgress } from '@mui/material';
-import { AuthPageState } from '../hooks/useAuthPage.hook';
+import { useState } from "react";
+import {
+    TextField,
+    Button,
+    Box,
+    Typography,
+    Link,
+    CircularProgress,
+} from "@mui/material";
+import { AuthPageState } from "../hooks/useAuthPage.hook";
 
 interface ForgotPasswordFormProps {
     onSwitchToLogin: () => void;
     onSwitchToRegister: () => void;
-    onSubmit: ({ email }: { email: string }) => void,
-    pageState: AuthPageState
+    onSubmit: ({ email }: { email: string }) => void;
+    pageState: AuthPageState;
 }
 
-export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubmit, pageState }: ForgotPasswordFormProps) {
+export function ForgotPasswordForm({
+    onSwitchToLogin,
+    onSwitchToRegister,
+    onSubmit,
+    pageState,
+}: ForgotPasswordFormProps) {
     const { isLoading } = pageState;
 
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState("");
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -26,15 +38,20 @@ export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubm
             component="form"
             onSubmit={handleSubmit}
             sx={{
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
                 gap: 2,
                 maxWidth: 400,
-                margin: '0 auto',
+                margin: "0 auto",
                 padding: 4,
             }}
         >
-            <Typography variant="h4" component="h1" textAlign="center" gutterBottom>
+            <Typography
+                variant="h4"
+                component="h1"
+                textAlign="center"
+                gutterBottom
+            >
                 Forgot Password
             </Typography>
 
@@ -60,24 +77,35 @@ export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubm
                 {isLoading ? (
                     <CircularProgress size={24} color="inherit" />
                 ) : (
-                    'Recuperar senha'
+                    "Recuperar senha"
                 )}
             </Button>
 
             {!isLoading && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 1,
+                        mt: 2,
+                    }}
+                >
                     <Link
                         component="button"
                         type="button"
                         onClick={onSwitchToLogin}
                         underline="hover"
-                        sx={{ textAlign: 'center' }}
+                        sx={{ textAlign: "center" }}
                     >
                         Tenho conta
                     </Link>
 
-                    <Typography variant="body2" textAlign="center" sx={{ mt: 1 }}>
-                        Não tem uma conta?{' '}
+                    <Typography
+                        variant="body2"
+                        textAlign="center"
+                        sx={{ mt: 1 }}
+                    >
+                        Não tem uma conta?{" "}
                         <Link
                             component="button"
                             type="button"
@@ -92,4 +120,3 @@ export function ForgotPasswordForm({ onSwitchToLogin, onSwitchToRegister, onSubm
         </Box>
     );
 }
-

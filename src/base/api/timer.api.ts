@@ -22,9 +22,10 @@ async function startTimer(): Promise<Result<StartTimerResponse, ApiError>> {
         return Result.ok({});
     } catch (error: any) {
         return Result.error({
-            name: 'StartTimerError',
+            name: "StartTimerError",
             statusCode: error.response?.status,
-            message: error.response?.data?.message || 'Error while starting timer',
+            message:
+                error.response?.data?.message || "Error while starting timer",
             details: error.response?.data,
         });
     }
@@ -40,9 +41,10 @@ async function stopTimer(): Promise<Result<StopTimerResponse, ApiError>> {
         });
     } catch (error: any) {
         return Result.error({
-            name: 'StopTimerError',
+            name: "StopTimerError",
             statusCode: error.response?.status,
-            message: error.response?.data?.message || 'Error while stopping timer',
+            message:
+                error.response?.data?.message || "Error while stopping timer",
             details: error.response?.data,
         });
     }

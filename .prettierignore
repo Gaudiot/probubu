@@ -1,0 +1,8 @@
+# Ignore artifacts:
+build
+coverage
+
+# Ignore everything except .ts and .tsx files:
+*
+!**/src/**/*.ts
+!**/src/**/*.tsx

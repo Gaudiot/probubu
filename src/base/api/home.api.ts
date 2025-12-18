@@ -11,7 +11,7 @@ type GetHomeDataResponse = {
     mascotAssets: {
         restingImageUrl: string;
         studyingImageUrl: string;
-    }
+    };
 };
 
 // MARK: - API Functions
@@ -24,14 +24,17 @@ async function getHomeData(): Promise<Result<GetHomeDataResponse, ApiError>> {
             backgroundImageUrl: response.data.background_image_url,
             mascotAssets: {
                 restingImageUrl: response.data.mascot_assets.resting_image_url,
-                studyingImageUrl: response.data.mascot_assets.studying_image_url,
+                studyingImageUrl:
+                    response.data.mascot_assets.studying_image_url,
             },
         });
     } catch (error: any) {
         return Result.error({
-            name: 'GetHomeDataError',
+            name: "GetHomeDataError",
             statusCode: error.response?.status,
-            message: error.response?.data?.message || 'Error while getting home data',
+            message:
+                error.response?.data?.message ||
+                "Error while getting home data",
             details: error.response?.data,
         });
     }

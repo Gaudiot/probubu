@@ -10,14 +10,16 @@ const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
 
 type GetUserPerformanceResponse = {
     performance: {
-        date: Date
-        secondsElapsed: number
-    }[]
-}
+        date: Date;
+        secondsElapsed: number;
+    }[];
+};
 
 // MARK: - API Functions
 
-async function getUserPerformance(): Promise<Result<GetUserPerformanceResponse, ApiError>> {
+async function getUserPerformance(): Promise<
+    Result<GetUserPerformanceResponse, ApiError>
+> {
     try {
         const response = await apiClient.get(`${BASE_URL}/user/performance`);
 
@@ -29,9 +31,11 @@ async function getUserPerformance(): Promise<Result<GetUserPerformanceResponse, 
         });
     } catch (error: any) {
         return Result.error({
-            name: 'GetUserPerformanceError',
+            name: "GetUserPerformanceError",
             statusCode: error.response?.status,
-            message: error.response?.data?.message || 'Error while getting user performance',
+            message:
+                error.response?.data?.message ||
+                "Error while getting user performance",
             details: error.response?.data,
         });
     }
@@ -39,4 +43,4 @@ async function getUserPerformance(): Promise<Result<GetUserPerformanceResponse, 
 
 export const userApi = {
     getUserPerformance,
-}
+};

@@ -2,8 +2,8 @@ export class Result<T, E = Error> {
     private constructor(
         private readonly _success: boolean,
         private readonly _data?: T,
-        private readonly _error?: E
-    ) { }
+        private readonly _error?: E,
+    ) {}
 
     static ok<T, E = Error>(data: T): Result<T, E> {
         return new Result<T, E>(true, data, undefined);
@@ -23,14 +23,14 @@ export class Result<T, E = Error> {
 
     get data(): T {
         if (!this._success) {
-            throw new Error('Cannot get data from error result');
+            throw new Error("Cannot get data from error result");
         }
         return this._data!;
     }
 
     get error(): E {
         if (this._success) {
-            throw new Error('Cannot get error from success result');
+            throw new Error("Cannot get error from success result");
         }
         return this._error!;
     }

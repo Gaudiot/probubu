@@ -8,4 +8,3 @@ export const UIColors = {
     input: "bg-gray-50 border border-gray-300 text-gray-900 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white focus:border-blue-600 focus:ring-blue-600",
     error: "text-red-500",
 };
-

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { ReactNode } from 'react';
-import { AuthProvider } from '@/core/auth/AuthContext';
-import { CssBaseline } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { ReactNode } from "react";
+import { AuthProvider } from "@/core/auth/AuthContext";
+import { CssBaseline } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 interface ProvidersProps {
     children: ReactNode;
@@ -13,7 +13,7 @@ interface ProvidersProps {
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#000000',
+            main: "#000000",
         },
     },
 });
@@ -28,4 +28,3 @@ export function Providers({ children }: ProvidersProps) {
         </AppRouterCacheProvider>
     );
 }
-

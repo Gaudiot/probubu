@@ -1,6 +1,6 @@
 /**
  * Utility functions for managing cookies
- * 
+ *
  * Note: HttpOnly cookies CANNOT be set from client-side JavaScript.
  * They must be set by the server in the response headers.
  * These functions handle Secure and SameSite cookies only.
@@ -9,14 +9,14 @@
 import { DAY_IN_MILLISECONDS } from "./constants";
 
 export class CookiesKeys {
-    static REFRESH_TOKEN = 'refresh_token';
+    static REFRESH_TOKEN = "refresh_token";
 }
 
 interface CookieOptions {
     days?: number;
     path?: string;
     secure?: boolean;
-    sameSite?: 'Strict' | 'Lax' | 'None';
+    sameSite?: "Strict" | "Lax" | "None";
 }
 
 /**
@@ -26,20 +26,20 @@ interface CookieOptions {
 export function setCookie(
     name: string,
     value: string,
-    options: CookieOptions = {}
+    options: CookieOptions = {},
 ): void {
     const {
         days = 7,
-        path = '/',
+        path = "/",
         secure = true,
-        sameSite = 'Strict',
+        sameSite = "Strict",
     } = options;
 
     let cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
 
     // Set expiration
     if (days) {
-        const date = new Date();;
+        const date = new Date();
         date.setTime(date.getTime() + days * DAY_IN_MILLISECONDS);
         cookie += `; expires=${date.toUTCString()}`;
     }
@@ -49,7 +49,7 @@ export function setCookie(
 
     // Set secure flag (only sent over HTTPS)
     if (secure) {
-        cookie += '; Secure';
+        cookie += "; Secure";
     }
 
     // Set SameSite attribute
@@ -62,8 +62,8 @@ export function setCookie(
  * Gets a cookie value by name
  */
 export function getCookie(name: string): string | null {
-    const nameEQ = encodeURIComponent(name) + '=';
-    const cookies = document.cookie.split(';');
+    const nameEQ = encodeURIComponent(name) + "=";
+    const cookies = document.cookie.split(";");
 
     for (let cookie of cookies) {
         cookie = cookie.trim();
@@ -78,8 +78,8 @@ export function getCookie(name: string): string | null {
 /**
  * Deletes a cookie by name
  */
-export function deleteCookie(name: string, path: string = '/'): void {
-    setCookie(name, '', { days: -1, path });
+export function deleteCookie(name: string, path: string = "/"): void {
+    setCookie(name, "", { days: -1, path });
 }
 
 /**
@@ -94,12 +94,12 @@ export function hasCookie(name: string): boolean {
  * Note: HttpOnly cookies cannot be deleted from client-side
  */
 export function clearAllCookies(): void {
-    const cookies = document.cookie.split(';');
+    const cookies = document.cookie.split(";");
 
-    for (let cookie of cookies) {
-        const eqPos = cookie.indexOf('=');
-        const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+    for (const cookie of cookies) {
+        const eqPos = cookie.indexOf("=");
+        const name =
+            eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
         deleteCookie(name);
     }
 }
-

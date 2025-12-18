@@ -9,5 +9,4 @@ export {
     deleteCookie,
     hasCookie,
     clearAllCookies,
-} from './cookies';
-
+} from "./cookies";
