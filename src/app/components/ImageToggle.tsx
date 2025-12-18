@@ -9,18 +9,27 @@ const IMAGE_URLS = {
 };
 
 type ImageToggleProps = {
+    onSessionEnd: () => void;
     imageUrls: {
         inactive: string;
         active: string;
     };
 };
 
-export function ImageToggle({ imageUrls }: ImageToggleProps) {
+export function ImageToggle({ imageUrls, onSessionEnd }: ImageToggleProps) {
     const { formattedTime, isRunning, startTimer, stopTimer } = useTimer();
 
     const currentImage = isRunning ? imageUrls.active : imageUrls.inactive;
     const buttonLabel = isRunning ? "Stop" : "Start";
-    const buttonAction = isRunning ? stopTimer : startTimer;
+    // const buttonAction = isRunning ? stopTimer : startTimer;
+    const buttonAction = () => {
+        if (isRunning) {
+            stopTimer();
+            onSessionEnd();
+        } else {
+            startTimer();
+        }
+    };
 
     return (
         <div className="flex flex-col items-center gap-6">

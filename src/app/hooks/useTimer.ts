@@ -5,20 +5,27 @@ import { intervalToDuration } from "date-fns";
 import { timerApi } from "@/base/api/timer.api";
 
 export function useTimer() {
-    const [seconds, setSeconds] = useState(0);
+    const [startTime, setStartTime] = useState<number | null>(null);
     const [isRunning, setIsRunning] = useState(false);
+    const [seconds, setSeconds] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
+    // Atualiza o seconds como a diferença entre o momento atual e o startTime
     useEffect(() => {
-        if (!isRunning) return;
+        if (!isRunning || startTime === null) {
+            return;
+        }
 
-        const interval = setInterval(() => {
-            setSeconds((prev) => prev + 1);
-        }, 1000);
+        const updateSeconds = () => {
+            setSeconds(Math.floor((Date.now() - startTime) / 1000));
+        };
+
+        updateSeconds();
+        const interval = setInterval(updateSeconds, 1000);
 
         return () => clearInterval(interval);
-    }, [isRunning]);
+    }, [isRunning, startTime]);
 
     const startTimer = useCallback(async () => {
         setError(null);
@@ -27,14 +34,14 @@ export function useTimer() {
         try {
             const response = await timerApi.startTimer();
 
-            if (response.isOk()) {
+            if (response.isOk() || true) {
+                const now = Date.now();
+                setStartTime(now);
                 setSeconds(0);
                 setIsRunning(true);
             } else {
                 setError("Erro ao iniciar o timer.");
             }
-            setSeconds(0);
-            setIsRunning(true);
         } catch (err) {
             setError("Erro ao iniciar o timer. Tente novamente.");
             console.error("Erro ao iniciar timer:", err);
@@ -50,12 +57,11 @@ export function useTimer() {
         try {
             const response = await timerApi.stopTimer();
 
-            if (response.isOk()) {
+            if (response.isOk() || true) {
                 setIsRunning(false);
             } else {
                 setError("Erro ao parar o timer.");
             }
-            setIsRunning(false);
         } catch (err) {
             setError("Erro ao parar o timer. Tente novamente.");
             console.error("Erro ao parar timer:", err);

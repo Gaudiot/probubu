@@ -2,7 +2,8 @@
 build
 coverage
 
-# Ignore everything except .ts and .tsx files:
-*
-!**/src/**/*.ts
-!**/src/**/*.tsx
+# Ignore next files
+**/*.mjs
+**/*.json
+**/*.css
+next.config.ts

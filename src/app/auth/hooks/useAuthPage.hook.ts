@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { AUTH_FORM, AuthForm } from "../types/authTypes";
 import { useAuth } from "@/core/auth";
+import { toastNotification } from "@/core/notification";
 
 export type AuthPageState = {
     currentAuthForm: AuthForm;
@@ -50,7 +51,15 @@ function useAuthPage() {
     const handleLogin = useCallback(
         async ({ email, password }: { email: string; password: string }) => {
             setAuthPageState((prev) => ({ ...prev, isLoading: true }));
-            await login(email, password);
+
+            const loginResult = await login(email, password);
+
+            if (loginResult.isError()) {
+                toastNotification.error("Erro ao fazer login!");
+            } else {
+                toastNotification.success("Login realizado com sucesso");
+            }
+
             setAuthPageState((prev) => ({ ...prev, isLoading: false }));
         },
         [login],
@@ -69,7 +78,20 @@ function useAuthPage() {
             confirmPassword: string;
         }) => {
             setAuthPageState((prev) => ({ ...prev, isLoading: true }));
-            await register(email, username, password, confirmPassword);
+
+            const registerResult = await register(
+                email,
+                username,
+                password,
+                confirmPassword,
+            );
+
+            if (registerResult.isError()) {
+                toastNotification.error("Erro ao fazer registro!");
+            } else {
+                toastNotification.success("Registro realizado com sucesso");
+            }
+
             setAuthPageState((prev) => ({ ...prev, isLoading: false }));
         },
         [register],
@@ -78,7 +100,17 @@ function useAuthPage() {
     const handleForgotPassword = useCallback(
         async ({ email }: { email: string }) => {
             setAuthPageState((prev) => ({ ...prev, isLoading: true }));
-            await forgotPassword(email);
+
+            const forgotPasswordResult = await forgotPassword(email);
+
+            if (forgotPasswordResult.isError()) {
+                toastNotification.error("Erro ao fazer forgot password!");
+            } else {
+                toastNotification.success(
+                    "E-mail para redefinição de senha enviado com sucesso",
+                );
+            }
+
             setAuthPageState((prev) => ({ ...prev, isLoading: false }));
         },
         [forgotPassword],

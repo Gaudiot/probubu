@@ -12,8 +12,17 @@ const eslintConfig = defineConfig([
             "@typescript-eslint/no-unused-vars": "error",
             "@typescript-eslint/no-explicit-any": "warn",
             "prefer-const": "error",
-            semi: "error",
-            quotes: "error",
+            semi: ["error", "always"],
+            quotes: ["error", "double", { avoidEscape: true }],
+            "max-len": [
+                "warn",
+                {
+                    code: 80,
+                    ignoreUrls: true,
+                    ignoreStrings: true,
+                    ignoreTemplateLiterals: true,
+                },
+            ],
         },
     },
     // Override default ignores of eslint-config-next.
