@@ -1,3 +1,4 @@
+import { formatTime } from "@/core/utils/functions/time.utils";
 import { Box, Modal, Typography } from "@mui/material";
 
 interface SessionEndModalProps {
@@ -30,11 +31,20 @@ function SessionEndModal({ modalData, open, onClose }: SessionEndModalProps) {
                     p: 4,
                 }}
             >
-                <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Typography
+                    id="modal-modal-title"
+                    variant="h6"
+                    component="h2"
+                    align="center"
+                >
                     Congratulations! You finished your session!
                 </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    {`You earned ${modalData.coinsEarned} coins in ${modalData.secondsElapsed} seconds.`}
+                <Typography
+                    id="modal-modal-description"
+                    sx={{ mt: 2 }}
+                    align="center"
+                >
+                    {`You earned ${modalData.coinsEarned} coins. Your session lasted ${formatTime(modalData.secondsElapsed)}.`}
                 </Typography>
             </Box>
         </Modal>

@@ -6,7 +6,9 @@ const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
 
 // MARK: - Response Payloads
 
-type StartTimerResponse = {};
+type StartTimerResponse = {
+    success: boolean;
+};
 
 type StopTimerResponse = {
     coinsEarned: number;
@@ -19,7 +21,7 @@ async function startTimer(): Promise<Result<StartTimerResponse, ApiError>> {
     try {
         await apiClient.post(`${BASE_URL}/timer/start`, {});
 
-        return Result.ok({});
+        return Result.ok({ success: true });
     } catch (error: any) {
         return Result.error({
             name: "StartTimerError",

@@ -41,7 +41,7 @@ function useHomePage() {
         setHomePageState((prev) => ({
             ...prev,
             data: {
-                backgroundImageUrl: "https://picsum.photos/300/200",
+                backgroundImageUrl: "https://picsum.photos/1280/800",
                 mascotAssets: {
                     restingImageUrl: "https://picsum.photos/id/115/200/300",
                     studyingImageUrl: "https://picsum.photos/id/935/200/300",

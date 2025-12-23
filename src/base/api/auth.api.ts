@@ -1,6 +1,6 @@
+import { Result } from "@/core/types/result";
 import { ApiError } from "next/dist/server/api-utils";
 import { apiClient } from "./axios-instance.api";
-import { Result } from "@/core/types/result";
 
 const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
 

@@ -1,10 +1,10 @@
 "use client";
 
+import { Navbar } from "@/base/components/navbar";
 import { useEffect } from "react";
-import useHomePage from "./hooks/useHomePage.hook";
-import { Navbar } from "@/components/navbar";
 import { ImageToggle } from "./components/ImageToggle";
 import SessionEndModal from "./components/SessionEndModal";
+import useHomePage from "./hooks/useHomePage.hook";
 
 function HomePage() {
     const {
@@ -19,11 +19,11 @@ function HomePage() {
     }, [fetchHomeData]);
 
     return (
-        <>
+        <div className="flex flex-col h-screen">
             <Navbar />
             {homePageState.data && (
                 <div
-                    className="relative w-full h-screen"
+                    className="relative w-full flex-1 overflow-hidden"
                     style={{
                         backgroundImage: `url(${homePageState.data.backgroundImageUrl})`,
                         backgroundRepeat: "no-repeat",
@@ -54,7 +54,7 @@ function HomePage() {
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 }
 

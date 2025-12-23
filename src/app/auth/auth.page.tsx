@@ -1,11 +1,11 @@
 "use client";
 
+import { Navbar } from "@/base/components/navbar";
+import { ForgotPasswordForm } from "./components/ForgotPasswordForm";
 import { LoginForm } from "./components/LoginForm";
 import { RegisterForm } from "./components/RegisterForm";
-import { AUTH_FORM } from "./types/authTypes";
-import { ForgotPasswordForm } from "./components/ForgotPasswordForm";
 import useAuthPage from "./hooks/useAuthPage.hook";
-import { Navbar } from "@/components/navbar";
+import { AUTH_FORM } from "./types/authTypes";
 
 function AuthFormComponent() {
     const {

@@ -1,7 +1,8 @@
-import { useState, useCallback } from "react";
-import { AUTH_FORM, AuthForm } from "../types/authTypes";
 import { useAuth } from "@/core/auth";
 import { toastNotification } from "@/core/notification";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useState } from "react";
+import { AUTH_FORM, AuthForm } from "../types/authTypes";
 
 export type AuthPageState = {
     currentAuthForm: AuthForm;
@@ -11,8 +12,22 @@ export type AuthPageState = {
 };
 
 function useAuthPage() {
+    const searchParams = useSearchParams();
+
+    const getInitialAuthForm = (): AuthForm => {
+        const typeParam = searchParams.get("type");
+
+        if (typeParam === "login") {
+            return AUTH_FORM.LOGIN;
+        } else if (typeParam === "register") {
+            return AUTH_FORM.REGISTER;
+        }
+
+        return AUTH_FORM.LOGIN;
+    };
+
     const [authPageState, setAuthPageState] = useState<AuthPageState>({
-        currentAuthForm: AUTH_FORM.LOGIN,
+        currentAuthForm: getInitialAuthForm(),
         isLoading: false,
         hasError: false,
         errorMessage: undefined,

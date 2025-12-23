@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useContext } from "react";
-import { AuthContext } from "./AuthContext";
 import { authApi } from "@/base/api/auth.api";
-import { authService } from "./authService";
+import { useCallback, useContext } from "react";
 import { Result } from "../types/result";
+import { AuthContext } from "./AuthContext";
 import { AUTH_ERROR, AuthErrorType } from "./authErrors";
+import { authService } from "./authService";
 
 /**
  * Hook to access authentication context
@@ -25,7 +25,9 @@ export function useAuth() {
         authService.removeRefreshToken();
     }, [context]);
 
-    const logout = useCallback(async () => {
+    const logout = useCallback(async (): Promise<
+        Result<boolean, AuthErrorType>
+    > => {
         const logoutResult = await authApi.logout();
 
         if (logoutResult.isError()) {
