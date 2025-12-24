@@ -67,12 +67,11 @@ function NavBarRightmostComponent() {
     const handleLogout = async () => {
         setIsDropdownOpen(false);
         await logout();
-        // router.push("/auth");
     };
 
     const handlePerformance = () => {
         setIsDropdownOpen(false);
-        router.push("/performance");
+        router.push("/user/performance");
     };
 
     if (!isAuthenticated) {
