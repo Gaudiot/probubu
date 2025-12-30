@@ -74,6 +74,11 @@ function NavBarRightmostComponent() {
         router.push("/user/performance");
     };
 
+    const handleCollections = () => {
+        setIsDropdownOpen(false);
+        router.push("/collections");
+    };
+
     if (!isAuthenticated) {
         return (
             <div className="flex items-center gap-3">
@@ -97,6 +102,12 @@ function NavBarRightmostComponent() {
                                 className="w-full px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                             >
                                 Performance
+                            </button>
+                            <button
+                                onClick={handleCollections}
+                                className="w-full px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            >
+                                Coleções
                             </button>
                             <button
                                 onClick={handleLogout}
