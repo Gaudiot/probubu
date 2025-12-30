@@ -1,3 +1,4 @@
+import { SessionEndData } from "@/app/types/session.types";
 import { homeApi } from "@/base/api/home.api";
 import { useCallback, useState } from "react";
 
@@ -11,12 +12,7 @@ export type HomePageState = {
               };
           }
         | undefined;
-    modalData:
-        | {
-              secondsElapsed: number;
-              coinsEarned: number;
-          }
-        | undefined;
+    modalData: SessionEndData | null;
     isLoading: boolean;
     hasError: boolean;
     errorMessage: string | undefined;
@@ -24,7 +20,7 @@ export type HomePageState = {
 
 const defaultHomePageState: HomePageState = {
     data: undefined,
-    modalData: undefined,
+    modalData: null,
     isLoading: false,
     hasError: false,
     errorMessage: undefined,
@@ -36,8 +32,9 @@ function useHomePage() {
 
     const fetchHomeData = useCallback(async () => {
         setHomePageState((prev) => ({ ...prev, isLoading: true }));
-        const response = await homeApi.getHomeData();
+        await homeApi.getHomeData();
 
+        // TODO: Remover dados mockados quando API estiver pronta
         setHomePageState((prev) => ({
             ...prev,
             data: {
@@ -50,23 +47,31 @@ function useHomePage() {
         }));
 
         // if (response.isError()) {
-        //     setHomePageState(prev => ({ ...prev, hasError: true, errorMessage: response.error.message }))
+        //     setHomePageState((prev) => ({
+        //         ...prev,
+        //         hasError: true,
+        //         errorMessage: response.error.message,
+        //     }));
         // } else {
-        //     const { backgroundImageUrl, mascotAssets } = response.data
-        //     setHomePageState(prev => ({ ...prev, data: { backgroundImageUrl, mascotAssets } }))
+        //     const { backgroundImageUrl, mascotAssets } = response.data;
+        //     setHomePageState((prev) => ({
+        //         ...prev,
+        //         data: { backgroundImageUrl, mascotAssets },
+        //     }));
         // }
+
         setHomePageState((prev) => ({ ...prev, isLoading: false }));
     }, []);
 
-    const displaySessionEndModal = useCallback(() => {
+    const displaySessionEndModal = useCallback((data: SessionEndData) => {
         setHomePageState((prev) => ({
             ...prev,
-            modalData: { secondsElapsed: 123, coinsEarned: 13 },
+            modalData: data,
         }));
     }, []);
 
     const dismissSessionEndModal = useCallback(() => {
-        setHomePageState((prev) => ({ ...prev, modalData: undefined }));
+        setHomePageState((prev) => ({ ...prev, modalData: null }));
     }, []);
 
     return {

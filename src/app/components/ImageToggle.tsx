@@ -1,15 +1,13 @@
 "use client";
 
-import Image from "next/image";
-import { useTimer } from "../hooks/useTimer";
-
-const IMAGE_URLS = {
-    inactive: "https://picsum.photos/id/115/200/300",
-    active: "https://picsum.photos/id/935/200/300",
-};
+import { toastNotification } from "@/core/notification";
+import { LoadingOutlined } from "@ant-design/icons";
+import { useHomeTimer } from "../hooks/useHomeTimer.hook";
+import { SessionEndData } from "../types/session.types";
+import { MascotImage } from "./MascotImage";
 
 type ImageToggleProps = {
-    onSessionEnd: () => void;
+    onSessionEnd: (data: SessionEndData) => void;
     imageUrls: {
         inactive: string;
         active: string;
@@ -17,17 +15,26 @@ type ImageToggleProps = {
 };
 
 export function ImageToggle({ imageUrls, onSessionEnd }: ImageToggleProps) {
-    const { formattedTime, isRunning, startTimer, stopTimer } = useTimer();
+    const { formattedTime, isRunning, startTimer, stopTimer, loading } =
+        useHomeTimer();
 
-    const currentImage = isRunning ? imageUrls.active : imageUrls.inactive;
-    const buttonLabel = isRunning ? "Stop" : "Start";
-    // const buttonAction = isRunning ? stopTimer : startTimer;
-    const buttonAction = () => {
+    const buttonLabel = isRunning ? "Parar" : "Iniciar";
+
+    const handleButtonClick = async () => {
         if (isRunning) {
-            stopTimer();
-            onSessionEnd();
+            const result = await stopTimer();
+
+            if (result.success) {
+                onSessionEnd(result.data);
+            } else {
+                toastNotification.error(result.error);
+            }
         } else {
-            startTimer();
+            const result = await startTimer();
+
+            if (!result.success) {
+                toastNotification.error(result.error);
+            }
         }
     };
 
@@ -39,24 +46,27 @@ export function ImageToggle({ imageUrls, onSessionEnd }: ImageToggleProps) {
                 </span>
             </div>
 
-            <div className="relative w-[200px] h-[300px] rounded-lg overflow-hidden shadow-lg">
-                <Image
-                    src={currentImage}
-                    alt={isRunning ? "Imagem ativada" : "Imagem desativada"}
-                    fill
-                    className="object-cover"
-                    priority
-                />
-            </div>
+            <MascotImage
+                imageUrls={imageUrls}
+                isActive={isRunning}
+                width={200}
+                height={300}
+            />
 
             <button
-                onClick={buttonAction}
-                className={`px-8 py-3 font-semibold text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg ${
-                    isRunning
-                        ? "bg-red-600 hover:bg-red-700"
-                        : "bg-green-600 hover:bg-green-700"
+                onClick={handleButtonClick}
+                disabled={loading}
+                className={`px-8 py-3 font-semibold text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg flex items-center gap-2 ${
+                    loading
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : isRunning
+                          ? "bg-red-600 hover:bg-red-700"
+                          : "bg-green-600 hover:bg-green-700"
                 }`}
             >
+                {loading && (
+                    <LoadingOutlined style={{ fontSize: "20px" }} spin />
+                )}
                 {buttonLabel}
             </button>
         </div>

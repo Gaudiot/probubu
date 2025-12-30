@@ -1,17 +1,16 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { intervalToDuration } from "date-fns";
+import { TimerStartResult, TimerStopResult } from "@/app/types/timer.types";
 import { timerApi } from "@/base/api/timer.api";
+import { intervalToDuration } from "date-fns";
+import { useCallback, useEffect, useState } from "react";
 
-export function useTimer() {
+export function useHomeTimer() {
     const [startTime, setStartTime] = useState<number | null>(null);
     const [isRunning, setIsRunning] = useState(false);
     const [seconds, setSeconds] = useState(0);
-    const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    // Atualiza o seconds como a diferença entre o momento atual e o startTime
     useEffect(() => {
         if (!isRunning || startTime === null) {
             return;
@@ -22,52 +21,69 @@ export function useTimer() {
         };
 
         updateSeconds();
-        const interval = setInterval(updateSeconds, 1000);
+        const interval = setInterval(updateSeconds, 500);
 
         return () => clearInterval(interval);
     }, [isRunning, startTime]);
 
-    const startTimer = useCallback(async () => {
-        setError(null);
+    const startTimer = useCallback(async (): Promise<TimerStartResult> => {
         setLoading(true);
 
-        try {
-            const response = await timerApi.startTimer();
+        const response = await timerApi.startTimer();
 
-            if (response.isOk() || true) {
+        let result: TimerStartResult = {
+            success: false,
+            error: "Erro desconhecido",
+        };
+
+        response.match(
+            () => {
                 const now = Date.now();
                 setStartTime(now);
                 setSeconds(0);
                 setIsRunning(true);
-            } else {
-                setError("Erro ao iniciar o timer.");
-            }
-        } catch (err) {
-            setError("Erro ao iniciar o timer. Tente novamente.");
-            console.error("Erro ao iniciar timer:", err);
-        } finally {
-            setLoading(false);
-        }
+                result = { success: true };
+            },
+            (error) => {
+                result = { success: false, error: error.message };
+            },
+        );
+
+        setLoading(false);
+        return result;
     }, []);
 
-    const stopTimer = useCallback(async () => {
-        setError(null);
+    const stopTimer = useCallback(async (): Promise<TimerStopResult> => {
         setLoading(true);
 
-        try {
-            const response = await timerApi.stopTimer();
+        const response = await timerApi.stopTimer();
 
-            if (response.isOk() || true) {
+        let result: TimerStopResult = {
+            success: false,
+            error: "Erro desconhecido",
+        };
+
+        response.match(
+            (data) => {
+                result = {
+                    success: true,
+                    data: {
+                        coinsEarned: data.coinsEarned,
+                        secondsElapsed: data.secondsElapsed,
+                    },
+                };
                 setIsRunning(false);
-            } else {
-                setError("Erro ao parar o timer.");
-            }
-        } catch (err) {
-            setError("Erro ao parar o timer. Tente novamente.");
-            console.error("Erro ao parar timer:", err);
-        } finally {
-            setLoading(false);
-        }
+                setStartTime(null);
+                setSeconds(0);
+            },
+            (error) => {
+                result = { success: false, error: error.message };
+            },
+        );
+
+        setLoading(false);
+
+        return result;
     }, []);
 
     const formatTime = useCallback((totalSeconds: number): string => {
@@ -102,7 +118,6 @@ export function useTimer() {
         formattedTime: formatTime(seconds),
         startTimer,
         stopTimer,
-        error,
         loading,
     };
 }

@@ -1,17 +1,20 @@
-import { apiClient } from "./axios-instance.api";
 import { Result } from "@/core/types/result";
 import { ApiError } from "next/dist/server/api-utils";
+import { apiClient } from "./axios-instance.api";
 
 const BASE_URL = "https://your-api-url.com"; // Defina manualmente depois
 
 // MARK: - Response Payloads
 
 type StartTimerResponse = {
-    success: boolean;
+    timerId: string;
+    startTimeEpoch: number;
 };
 
 type StopTimerResponse = {
+    timerId: string;
     coinsEarned: number;
+    endTimeEpoch: number;
     secondsElapsed: number;
 };
 
@@ -19,9 +22,12 @@ type StopTimerResponse = {
 
 async function startTimer(): Promise<Result<StartTimerResponse, ApiError>> {
     try {
-        await apiClient.post(`${BASE_URL}/timer/start`, {});
+        const response = await apiClient.post(`${BASE_URL}/timer/start`, {});
 
-        return Result.ok({ success: true });
+        return Result.ok({
+            timerId: response.data.timerId,
+            startTimeEpoch: response.data.start_time_epoch,
+        });
     } catch (error: any) {
         return Result.error({
             name: "StartTimerError",
@@ -38,6 +44,8 @@ async function stopTimer(): Promise<Result<StopTimerResponse, ApiError>> {
         const response = await apiClient.post(`${BASE_URL}/timer/stop`, {});
 
         return Result.ok({
+            timerId: response.data.timer_id,
+            endTimeEpoch: response.data.end_time_epoch,
             coinsEarned: response.data.coins_earned,
             secondsElapsed: response.data.seconds_elapsed,
         });
