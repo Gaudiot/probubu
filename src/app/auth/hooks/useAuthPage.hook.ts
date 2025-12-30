@@ -1,6 +1,6 @@
 import { useAuth } from "@/core/auth";
 import { toastNotification } from "@/core/notification";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { AUTH_FORM, AuthForm } from "../types/authTypes";
 
@@ -12,6 +12,7 @@ export type AuthPageState = {
 };
 
 function useAuthPage() {
+    const router = useRouter();
     const searchParams = useSearchParams();
 
     const getInitialAuthForm = (): AuthForm => {
@@ -70,14 +71,28 @@ function useAuthPage() {
             const loginResult = await login(email, password);
 
             if (loginResult.isError()) {
-                toastNotification.error("Erro ao fazer login!");
+                toastNotification.error(
+                    "Erro ao fazer login. Tente novamente mais tarde.",
+                    {
+                        toastId: "login-error",
+                    },
+                );
+                setAuthPageState((prev) => ({ ...prev, isLoading: false }));
             } else {
-                toastNotification.success("Login realizado com sucesso");
+                toastNotification.success(
+                    "Login realizado com sucesso. Redirecionando para a página inicial.",
+                    {
+                        toastId: "login-success",
+                        autoClose: 3000,
+                    },
+                );
+                setTimeout(() => {
+                    toastNotification.dismiss("login-success");
+                    router.push("/");
+                }, 3000);
             }
-
-            setAuthPageState((prev) => ({ ...prev, isLoading: false }));
         },
-        [login],
+        [login, router],
     );
 
     const handleRegister = useCallback(
@@ -102,14 +117,25 @@ function useAuthPage() {
             );
 
             if (registerResult.isError()) {
-                toastNotification.error("Erro ao fazer registro!");
+                toastNotification.error(
+                    "Erro ao registrar. Tente novamente mais tarde.",
+                );
+                setAuthPageState((prev) => ({ ...prev, isLoading: false }));
             } else {
-                toastNotification.success("Registro realizado com sucesso");
+                toastNotification.success(
+                    "Registro realizado com sucesso. Redirecionando para a página inicial.",
+                    {
+                        toastId: "registration-success",
+                        autoClose: 3000,
+                    },
+                );
+                setTimeout(() => {
+                    toastNotification.dismiss("registration-success");
+                    router.push("/");
+                }, 3000);
             }
-
-            setAuthPageState((prev) => ({ ...prev, isLoading: false }));
         },
-        [register],
+        [register, router],
     );
 
     const handleForgotPassword = useCallback(
@@ -119,10 +145,12 @@ function useAuthPage() {
             const forgotPasswordResult = await forgotPassword(email);
 
             if (forgotPasswordResult.isError()) {
-                toastNotification.error("Erro ao fazer forgot password!");
+                toastNotification.error(
+                    "Erro ao enviar email de recuperação de senha. Tente novamente mais tarde.",
+                );
             } else {
                 toastNotification.success(
-                    "E-mail para redefinição de senha enviado com sucesso",
+                    "Email de recuperação de senha enviado com sucesso. Verifique sua caixa de entrada.",
                 );
             }
 

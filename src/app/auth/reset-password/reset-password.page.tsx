@@ -13,14 +13,13 @@ import useResetPasswordPage from "./hooks/useResetPasswordPage.hook";
 
 function ResetPasswordPage() {
     const { resetPasswordState, handleResetPassword } = useResetPasswordPage();
+    const { isLoading } = resetPasswordState;
     const [newPassword, setNewPassword] = useState("");
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         handleResetPassword({ newPassword });
     };
-
-    const { isLoading } = resetPasswordState;
 
     return (
         <>

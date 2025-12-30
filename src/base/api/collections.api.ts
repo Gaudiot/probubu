@@ -1,3 +1,4 @@
+import { Card } from "@/base/types/card.type";
 import { Result } from "@/core/types/result";
 import { ApiError } from "next/dist/server/api-utils";
 import { apiClient } from "./axios-instance.api";
@@ -34,7 +35,7 @@ type GetCollectionsListResponse = {
 type GetCollectionResponse = {
     id: string;
     name: string;
-    cards: string[];
+    cards: Card[];
     packCost: number;
 };
 
@@ -78,6 +79,22 @@ async function getCollectionsList(): Promise<
             })),
         });
     } catch (error: any) {
+        return Result.ok({
+            collections: [
+                {
+                    id: "1",
+                    name: "Coleção 1",
+                },
+                {
+                    id: "2",
+                    name: "Coleção 2",
+                },
+                {
+                    id: "3",
+                    name: "Coleção 3",
+                },
+            ],
+        });
         return Result.error({
             name: "GetCollectionsListError",
             statusCode: error.response?.status,
@@ -102,6 +119,31 @@ async function getCollection(
             packCost: response.data.pack_cost,
         });
     } catch (error: any) {
+        return Result.ok({
+            cards: [
+                {
+                    id: "1",
+                    name: "Card 1", //9/16 *20 -> 3/4 * 60
+                    image_url: "https://picsum.photos/id/321/180/240",
+                    rarity: "COMMON",
+                },
+                {
+                    id: "2",
+                    name: "Card 2",
+                    image_url: "https://picsum.photos/id/322/180/240",
+                    rarity: "RARE",
+                },
+                {
+                    id: "3",
+                    name: "Card 3",
+                    image_url: "https://picsum.photos/id/323/180/240",
+                    rarity: "EPIC",
+                },
+            ],
+            id: "1",
+            name: "Coleção 1",
+            packCost: 100,
+        });
         return Result.error({
             name: "GetCollectionError",
             statusCode: error.response?.status,
