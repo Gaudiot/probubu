@@ -16,8 +16,15 @@ import {
     SelectChangeEvent,
     Typography,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { PackRewardModal } from "./components/pack-reward.modal";
 import useCollectionsPage from "./hooks/useCollectionsPage.hook";
+
+type PackCard = {
+    id: string;
+    name: string;
+    image_url: string;
+};
 
 type CardRarity = "COMMON" | "RARE" | "EPIC" | "LEGENDARY";
 
@@ -36,6 +43,8 @@ const getRarityColor = (rarity: CardRarity): string => {
 
 function CollectionsPage() {
     const isMobile = useIsMobile();
+    const [rewardCards, setRewardCards] = useState<PackCard[]>([]);
+    const [showRewardModal, setShowRewardModal] = useState(false);
 
     const {
         collectionsList,
@@ -55,6 +64,20 @@ function CollectionsPage() {
 
     const handleChange = (event: SelectChangeEvent) => {
         selectCollection(event.target.value);
+    };
+
+    const handleBuyPack = async () => {
+        const result = await buyPack();
+
+        if (result && result.success && "cards" in result) {
+            setRewardCards(result.cards as PackCard[]);
+            setShowRewardModal(true);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setShowRewardModal(false);
+        setRewardCards([]);
     };
 
     return (
@@ -127,7 +150,7 @@ function CollectionsPage() {
                             </Typography>
                             <Button
                                 variant="contained"
-                                onClick={buyPack}
+                                onClick={handleBuyPack}
                                 disabled={isBuyingPack}
                                 sx={{
                                     textTransform: "none",
@@ -135,7 +158,7 @@ function CollectionsPage() {
                             >
                                 {isBuyingPack
                                     ? "Comprando..."
-                                    : `Abrir pacote (${collectionDetails.packCost} moedas)`}
+                                    : `Abrir pacote (${collectionDetails.packCost} moedas) - ${collectionDetails.packSize} cartas`}
                             </Button>
                         </Box>
 
@@ -198,6 +221,12 @@ function CollectionsPage() {
                     </Box>
                 )}
             </Box>
+
+            <PackRewardModal
+                open={showRewardModal}
+                cards={rewardCards}
+                onClose={handleCloseModal}
+            />
         </>
     );
 }

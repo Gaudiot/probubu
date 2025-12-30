@@ -2,6 +2,7 @@ import { collectionsApi } from "@/base/api/collections.api";
 import { Card } from "@/base/types/card.type";
 import { toastNotification } from "@/core/notification";
 import { useCallback, useState } from "react";
+import { BuyPackResult } from "../types/pack.types";
 
 export type Collection = {
     id: string;
@@ -13,6 +14,7 @@ export type CollectionDetails = {
     name: string;
     cards: Card[];
     packCost: number;
+    packSize: number;
 };
 
 function useCollectionsPage() {
@@ -59,6 +61,7 @@ function useCollectionsPage() {
                     name: data.name,
                     cards: data.cards,
                     packCost: data.packCost,
+                    packSize: data.packSize,
                 });
             },
             () => {
@@ -86,17 +89,59 @@ function useCollectionsPage() {
             collectionId: selectedCollectionId,
         });
 
+        let result: BuyPackResult = {
+            success: false,
+            error: "Erro desconhecido",
+        };
         response.match(
             (data) => {
-                // TODO: Exibir cartas obtidas
-                console.log("Cartas obtidas:", data.cards);
+                result = {
+                    success: true,
+                    cards: data.cards,
+                };
+
+                // Atualiza as cartas no collectionDetails
+                setCollectionDetails((prevDetails) => {
+                    if (!prevDetails) return prevDetails;
+
+                    // Cria um mapa das cartas obtidas para facilitar a busca
+                    const newCardsMap = new Map(
+                        data.cards.map((card) => [card.id, card]),
+                    );
+
+                    // Atualiza cartas existentes ou mantém as antigas
+                    const updatedCards = prevDetails.cards.map((card) =>
+                        newCardsMap.has(card.id)
+                            ? newCardsMap.get(card.id)!
+                            : card,
+                    );
+
+                    // Adiciona cartas novas que não existiam
+                    const existingCardIds = new Set(
+                        prevDetails.cards.map((card) => card.id),
+                    );
+                    const newCards = data.cards.filter(
+                        (card) => !existingCardIds.has(card.id),
+                    );
+
+                    return {
+                        ...prevDetails,
+                        cards: [...updatedCards, ...newCards],
+                    };
+                });
             },
             () => {
+                result = {
+                    success: false,
+                    error: "Erro ao comprar pacote",
+                };
                 toastNotification.error("Erro ao comprar pacote");
             },
         );
 
         setIsBuyingPack(false);
+
+        return result;
     }, [selectedCollectionId]);
 
     return {
