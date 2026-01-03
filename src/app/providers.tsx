@@ -21,14 +21,40 @@ const theme = createTheme({
 
 export function Providers({ children }: ProvidersProps) {
     return (
-        <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <AuthProvider>
-                    <ToastContainerNotification />
-                    {children}
-                </AuthProvider>
-            </ThemeProvider>
-        </AppRouterCacheProvider>
+        <StartMockWorker>
+            <AppRouterCacheProvider>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <AuthProvider>
+                        <ToastContainerNotification />
+                        {children}
+                    </AuthProvider>
+                </ThemeProvider>
+            </AppRouterCacheProvider>
+        </StartMockWorker>
     );
+}
+
+import { useEffect, useState } from "react";
+
+export function StartMockWorker({ children }: { children: React.ReactNode }) {
+    const [isMockReady, setMockReady] = useState(false);
+
+    useEffect(() => {
+        async function enableMocks() {
+            if (process.env.NODE_ENV === "development") {
+                const { initMocks } = await import("../../mocks/msw/init");
+                await initMocks();
+            }
+            setMockReady(true);
+        }
+
+        enableMocks();
+    }, []);
+
+    if (!isMockReady) {
+        return <div>Loading mocks...</div>;
+    }
+
+    return <>{children}</>;
 }
