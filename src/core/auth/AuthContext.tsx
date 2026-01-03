@@ -1,12 +1,6 @@
 "use client";
 
-import {
-    createContext,
-    ReactNode,
-    useCallback,
-    useEffect,
-    useState,
-} from "react";
+import { createContext, ReactNode, useCallback, useState } from "react";
 
 interface AuthContextData {
     accessToken: string | null;
@@ -24,15 +18,13 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [accessToken, setAccessTokenState] = useState<string | null>(null);
-
-    // Load token from sessionStorage on mount (optional, for persistence across page reloads)
-    useEffect(() => {
-        const storedToken = sessionStorage.getItem("access_token");
-        if (storedToken) {
-            setAccessTokenState(storedToken);
+    const [accessToken, setAccessTokenState] = useState<string | null>(() => {
+        // Load token from sessionStorage on mount (for persistence across page reloads)
+        if (typeof window !== "undefined") {
+            return sessionStorage.getItem("access_token");
         }
-    }, []);
+        return null;
+    });
 
     const setAccessToken = useCallback((token: string) => {
         sessionStorage.setItem("access_token", token);

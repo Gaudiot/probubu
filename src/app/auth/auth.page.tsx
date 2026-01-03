@@ -1,6 +1,7 @@
 "use client";
 
 import { Navbar } from "@/base/components/navbar";
+import { Suspense } from "react";
 import { ForgotPasswordForm } from "./components/ForgotPasswordForm";
 import { LoginForm } from "./components/LoginForm";
 import { RegisterForm } from "./components/RegisterForm";
@@ -53,7 +54,17 @@ function AuthPage() {
     return (
         <>
             <Navbar hideRightmostComponent />
-            <AuthFormComponent />
+            <Suspense
+                fallback={
+                    <div className="flex items-center justify-center min-h-screen">
+                        <p className="text-gray-600 dark:text-gray-400">
+                            Carregando...
+                        </p>
+                    </div>
+                }
+            >
+                <AuthFormComponent />
+            </Suspense>
         </>
     );
 }

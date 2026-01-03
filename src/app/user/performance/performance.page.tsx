@@ -18,7 +18,7 @@ export default function PerformancePage() {
     const { performance, isLoading } = usePerformancePage();
 
     // Formatar dados para o Recharts
-    const chartData = performance.map((item, index) => ({
+    const chartData = performance.map((item) => ({
         name: item.date.toLocaleDateString("pt-BR", {
             day: "2-digit",
             month: "2-digit",
