@@ -1,6 +1,7 @@
 "use client";
 
 import { Navbar } from "@/base/components/navbar";
+import { formatToShortTime } from "@/core/utils/functions/time.utils";
 import {
     Bar,
     BarChart,
@@ -50,7 +51,7 @@ export default function PerformancePage() {
                     ) : (
                         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                             <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
-                                Tempo de Estudo (Minutos)
+                                Tempo de Estudo
                             </h2>
                             <ResponsiveContainer width="70%" height={300}>
                                 <BarChart data={chartData}>
@@ -84,8 +85,14 @@ export default function PerformancePage() {
                                             borderRadius: "8px",
                                             color: "#F9FAFB",
                                         }}
-                                        formatter={(value: number) => [
-                                            `${value} min`,
+                                        formatter={(
+                                            value: any,
+                                            name: any,
+                                            props: any,
+                                        ) => [
+                                            formatToShortTime(
+                                                props.payload.segundos,
+                                            ),
                                             "Tempo",
                                         ]}
                                     />

@@ -32,11 +32,32 @@ function usePerformancePage() {
                 setPerformance(performanceData.performance);
             },
             (error) => {
+                setPerformance(mockPerformanceData);
                 toastNotification.error(error.message);
             },
         );
 
         setIsLoading(false);
+    }, []);
+
+    useEffect(() => {
+        const loadPerformance = async () => {
+            setIsLoading(true);
+            const performanceResult = await userApi.getUserPerformance();
+
+            performanceResult.match(
+                (performanceData) => {
+                    setPerformance(performanceData.performance);
+                },
+                (error) => {
+                    toastNotification.error(error.message);
+                },
+            );
+
+            setIsLoading(false);
+        };
+
+        loadPerformance();
     }, []);
 
     return {
@@ -47,3 +68,13 @@ function usePerformancePage() {
 }
 
 export default usePerformancePage;
+
+const mockPerformanceData = Array.from({ length: 10 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (9 - i));
+    const secondsElapsed = Math.floor(Math.random() * (7200 - 120 + 1)) + 120;
+    return {
+        date,
+        secondsElapsed,
+    };
+});

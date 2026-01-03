@@ -23,3 +23,10 @@ export function formatTime(totalSeconds: number): string {
         secs.toString().padStart(2, "0"),
     ].join(":");
 }
+
+export function formatToShortTime(totalSeconds: number): string {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+    return `${hours}h${minutes.toString().padStart(2, "0")}min`;
+}
