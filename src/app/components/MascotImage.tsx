@@ -1,21 +1,17 @@
 "use client";
 
+import { imagesUrls } from "@/base/components/images/images_links";
 import { Skeleton } from "@mui/material";
 import Image from "next/image";
 import { useState } from "react";
 
 type MascotImageProps = {
-    imageUrls: {
-        inactive: string;
-        active: string;
-    };
     isActive: boolean;
     width?: number;
     height?: number;
 };
 
 export function MascotImage({
-    imageUrls,
     isActive,
     width = 200,
     height = 300,
@@ -51,7 +47,7 @@ export function MascotImage({
 
             {/* Preload inactive image */}
             <Image
-                src={imageUrls.inactive}
+                src={imagesUrls.MASCOT_RESTING}
                 alt="Mascote em repouso"
                 fill
                 className={`object-cover transition-opacity duration-200 ${
@@ -68,7 +64,7 @@ export function MascotImage({
 
             {/* Preload active image */}
             <Image
-                src={imageUrls.active}
+                src={imagesUrls.MASCOT_STUDYING}
                 alt="Mascote estudando"
                 fill
                 className={`object-cover transition-opacity duration-200 ${

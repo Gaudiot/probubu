@@ -8,13 +8,9 @@ import { MascotImage } from "./MascotImage";
 
 type ImageToggleProps = {
     onSessionEnd: (data: SessionEndData) => void;
-    imageUrls: {
-        inactive: string;
-        active: string;
-    };
 };
 
-export function ImageToggle({ imageUrls, onSessionEnd }: ImageToggleProps) {
+export function ImageToggle({ onSessionEnd }: ImageToggleProps) {
     const { formattedTime, isRunning, startTimer, stopTimer, loading } =
         useHomeTimer();
 
@@ -46,12 +42,7 @@ export function ImageToggle({ imageUrls, onSessionEnd }: ImageToggleProps) {
                 </span>
             </div>
 
-            <MascotImage
-                imageUrls={imageUrls}
-                isActive={isRunning}
-                width={200}
-                height={300}
-            />
+            <MascotImage isActive={isRunning} width={200} height={300} />
 
             <button
                 onClick={handleButtonClick}

@@ -1,35 +1,22 @@
 "use client";
 
 import { useAuth } from "@/core/auth/useAuth";
-import { DollarCircleOutlined, UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { imageApi } from "../api/image.api";
+import { imagesUrls } from "./images/images_links";
 
 function NavBarLeftmostComponent() {
-    const [logoImage, setLogoImage] = useState<string | null>(null);
-
-    useEffect(() => {
-        async function fetchLogoImage() {
-            const logoImageResult = await imageApi.getLogoImage();
-            if (logoImageResult.isOk()) {
-                setLogoImage(logoImageResult.data.imageUrl);
-            }
-        }
-
-        fetchLogoImage();
-    }, []);
-
     return (
         <div className="flex items-center">
             <Link href="/" className="cursor-pointer">
                 <Image
-                    src={logoImage || "https://picsum.photos/id/10/40/40"}
+                    src={imagesUrls.LOGO}
                     alt="Logo esquerdo"
-                    width={40}
-                    height={40}
+                    width={300}
+                    height={50}
                     className="rounded"
                 />
             </Link>
@@ -85,9 +72,12 @@ function NavBarRightmostComponent() {
                 <span className="font-semibold" style={{ fontSize: "30px" }}>
                     13
                 </span>
-                <DollarCircleOutlined
-                    style={{ fontSize: "40px" }}
-                    className="text-gray-700 dark:text-gray-300"
+                <Image
+                    src={imagesUrls.COIN_ICON}
+                    alt="Coin icon"
+                    width={40}
+                    height={40}
+                    className="rounded-full"
                 />
                 <div className="relative" ref={dropdownRef}>
                     <UserOutlined

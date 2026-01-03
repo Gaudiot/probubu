@@ -3,15 +3,6 @@ import { homeApi } from "@/base/api/home.api";
 import { useCallback, useState } from "react";
 
 export type HomePageState = {
-    data:
-        | {
-              backgroundImageUrl: string;
-              mascotAssets: {
-                  restingImageUrl: string;
-                  studyingImageUrl: string;
-              };
-          }
-        | undefined;
     modalData: SessionEndData | null;
     isLoading: boolean;
     hasError: boolean;
@@ -19,7 +10,6 @@ export type HomePageState = {
 };
 
 const defaultHomePageState: HomePageState = {
-    data: undefined,
     modalData: null,
     isLoading: false,
     hasError: false,
@@ -32,33 +22,19 @@ function useHomePage() {
 
     const fetchHomeData = useCallback(async () => {
         setHomePageState((prev) => ({ ...prev, isLoading: true }));
-        await homeApi.getHomeData();
+        const response = await homeApi.getHomeData();
 
-        // TODO: Remover dados mockados quando API estiver pronta
-        setHomePageState((prev) => ({
-            ...prev,
-            data: {
-                backgroundImageUrl: "https://picsum.photos/1280/800",
-                mascotAssets: {
-                    restingImageUrl: "https://picsum.photos/id/115/200/300",
-                    studyingImageUrl: "https://picsum.photos/id/935/200/300",
-                },
-            },
-        }));
-
-        // if (response.isError()) {
-        //     setHomePageState((prev) => ({
-        //         ...prev,
-        //         hasError: true,
-        //         errorMessage: response.error.message,
-        //     }));
-        // } else {
-        //     const { backgroundImageUrl, mascotAssets } = response.data;
-        //     setHomePageState((prev) => ({
-        //         ...prev,
-        //         data: { backgroundImageUrl, mascotAssets },
-        //     }));
-        // }
+        if (response.isError()) {
+            setHomePageState((prev) => ({
+                ...prev,
+                hasError: true,
+                errorMessage: response.error.message,
+            }));
+        } else {
+            setHomePageState((prev) => ({
+                ...prev,
+            }));
+        }
 
         setHomePageState((prev) => ({ ...prev, isLoading: false }));
     }, []);
