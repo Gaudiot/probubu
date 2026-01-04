@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { timerDb } from "./db";
+import { timerDb, userDb } from "./db";
 
 const BASE_URL = "https://your-api-url.com";
 
@@ -9,7 +9,7 @@ export const handlers = [
         const body = await request.json();
         const userId = "123";
         const now = Date.now();
-        const timerId = now.toString();
+        const timerId = crypto.randomUUID();
 
         timerDb.push({
             userId,
@@ -50,5 +50,66 @@ export const handlers = [
             coins_earned: coinsEarned,
             seconds_elapsed: secondsElapsed,
         });
+    }),
+
+    http.post(`${BASE_URL}/register`, async ({ request }) => {
+        const body = (await request.json()) as {
+            email: string;
+            username: string;
+            password: string;
+        };
+        const user = userDb.find((u) => u.email === body.email);
+
+        if (user) {
+            return HttpResponse.json(
+                { error: "User already exists" },
+                { status: 400 },
+            );
+        }
+
+        userDb.push({
+            id: crypto.randomUUID(),
+            username: body.username,
+            email: body.email,
+            password_hash: body.password,
+            balance: 0,
+        });
+
+        return HttpResponse.json({
+            access_token: "mock-access-token",
+            refresh_token: "mock-refresh-token",
+        });
+    }),
+
+    http.post(`${BASE_URL}/login`, async ({ request }) => {
+        const body = (await request.json()) as {
+            email: string;
+            password: string;
+        };
+
+        const user = userDb.find((u) => u.email === body.email);
+
+        if (!user) {
+            return HttpResponse.json(
+                { error: "User not found" },
+                { status: 404 },
+            );
+        }
+
+        if (user?.password_hash !== body.password) {
+            return HttpResponse.json(
+                { error: "Invalid password" },
+                { status: 401 },
+            );
+        }
+
+        return HttpResponse.json({
+            access_token: "mock-access-token",
+            refresh_token: "mock-refresh-token",
+        });
+    }),
+
+    http.post(`${BASE_URL}/logout`, async ({ request }) => {
+        return HttpResponse.json({}, { status: 200 });
     }),
 ];

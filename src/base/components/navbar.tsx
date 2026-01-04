@@ -66,7 +66,7 @@ function NavBarRightmostComponent() {
         router.push("/collections");
     };
 
-    if (!isAuthenticated) {
+    if (isAuthenticated) {
         return (
             <div className="flex items-center gap-3">
                 <span className="font-semibold" style={{ fontSize: "30px" }}>
