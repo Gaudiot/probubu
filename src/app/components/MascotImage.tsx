@@ -31,7 +31,7 @@ export function MascotImage({
             style={{ width, height }}
         >
             {/* Skeleton with animation while loading */}
-            {(!currentImageLoaded || true) && (
+            {!currentImageLoaded && (
                 <Skeleton
                     variant="rectangular"
                     width={width}
@@ -50,7 +50,8 @@ export function MascotImage({
                 src={imagesUrls.MASCOT_RESTING}
                 alt="Mascote em repouso"
                 fill
-                className={`object-cover transition-opacity duration-200 ${
+                // object-contain faz resize para caber no espaço sem deformar
+                className={`object-contain transition-opacity duration-200 ${
                     !isActive && imagesLoaded.inactive
                         ? "opacity-100"
                         : "opacity-0"

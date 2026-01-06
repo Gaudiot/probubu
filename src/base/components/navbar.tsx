@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/core/auth/useAuth";
+import { useIsMobile } from "@/core/hooks";
 import { UserOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,13 +10,14 @@ import { useEffect, useRef, useState } from "react";
 import { imagesUrls } from "./images/images_links";
 
 function NavBarLeftmostComponent() {
+    const isMobile = useIsMobile();
     return (
         <div className="flex items-center">
             <Link href="/" className="cursor-pointer">
                 <Image
-                    src={imagesUrls.LOGO}
+                    src={isMobile ? imagesUrls.LOGO_MOBILE : imagesUrls.LOGO}
                     alt="Logo esquerdo"
-                    width={300}
+                    width={isMobile ? 50 : 300}
                     height={50}
                     className="rounded"
                 />

@@ -2,12 +2,14 @@
 
 import { imagesUrls } from "@/base/components/images/images_links";
 import { Navbar } from "@/base/components/navbar";
+import { useIsMobile } from "@/core/hooks";
 import { useEffect } from "react";
 import { ImageToggle } from "./components/ImageToggle";
 import SessionEndModal from "./components/SessionEndModal";
 import useHomePage from "./hooks/useHomePage.hook";
 
 function HomePage() {
+    const isMobile = useIsMobile();
     const {
         homePageState,
         fetchHomeData,
@@ -25,9 +27,10 @@ function HomePage() {
             <div
                 className="relative w-full flex-1 overflow-hidden"
                 style={{
-                    backgroundImage: `url(${imagesUrls.HOME_BACKGROUND})`,
+                    backgroundImage: `url(${isMobile ? imagesUrls.HOME_BACKGROUND_MOBILE : imagesUrls.HOME_BACKGROUND})`,
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
+                    backgroundPosition: "center",
                 }}
             >
                 <SessionEndModal
